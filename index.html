@@ -106,7 +106,12 @@ graue Kästen umzugehörige Klassen
       background-color: #440000;
       cursor: not-allowed;
     }
-
+    
+    button.was-active {
+      background-color: #888;
+      color: white;
+    }
+    
     .lock {
       position: fixed;
       bottom: 20px;
@@ -236,9 +241,14 @@ graue Kästen umzugehörige Klassen
     db.ref('konferenz').on('value', snap => {
       const data = snap.val();
       clearInterval(timerInterval);
-      document.querySelectorAll('button').forEach(btn =>
-        btn.classList.remove('active')
-      );
+      document.querySelectorAll('button').forEach(btn => {
+  if (btn.classList.contains('active')) {
+    btn.classList.remove('active');
+    btn.classList.add('was-active'); // vorher aktiv, jetzt grau
+  } else {
+    btn.classList.remove('was-active'); // falls jemand versehentlich grau bleibt
+  }
+});
 
       if (data && data.klasse && data.startzeit) {
         const start = new Date(data.startzeit);
