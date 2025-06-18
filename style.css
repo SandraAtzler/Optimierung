@@ -1,1 +1,117 @@
-
+body {
+  font-family: Arial, sans-serif;
+  background-color: #fefefe;
+  margin: 20px;
+}
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  user-select: none;
+  cursor: default;
+}
+.logo-status-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  gap: 20px;
+}
+.logo {
+  height: 60px;
+  user-select: none;
+}
+.status {
+  font-size: 18px;
+  font-weight: bold;
+  user-select: none;
+}
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 10px;
+}
+.group-box {
+  border: 2px solid #eee;
+  border-radius: 8px;
+  padding: 0;
+  margin-bottom: 20px;
+  background-color: transparent;
+  overflow: hidden;
+}
+.group-header {
+  background-color: #eee;
+  padding: 12px 25px;
+  font-weight: bold;
+  font-size: 16px;
+  color: #333;
+  text-align: center;
+  border-bottom: 2px solid #eee;
+}
+.group-content {
+  padding: 10px 30px 0px 30px;
+}
+.class-row {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.class-label {
+  font-weight: bold;
+  font-size: 14px;
+  color: #330000;
+  margin-right: 10px;
+  min-width: 100px;
+}
+button {
+  background-color: darkred;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  min-width: 70px;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  user-select: none;
+}
+button:focus {
+  outline: 2px solid #8b0000;
+  outline-offset: 2px;
+}
+button.active {
+  background-color: #c58080;
+}
+button.visited {
+  background-color: #999;
+}
+button:disabled {
+  background-color: #440000;
+  cursor: not-allowed;
+}
+.lock {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  filter: brightness(0) saturate(100%) invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+  transition: filter 0.3s;
+  user-select: none;
+}
+.lock.unlocked {
+  filter: brightness(60%) saturate(10%) invert(60%) sepia(20%) saturate(400%) hue-rotate(0deg) brightness(70%) contrast(85%);
+  opacity: 0.7;
+}
+@media (max-width: 600px) {
+  .class-label {
+    display: none;
+  }
+  button {
+    padding: 6px 10px;
+    font-size: 14px;
+    min-width: 45px;
+  }
+}
