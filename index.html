@@ -240,13 +240,17 @@
       const data = snap.val();
       clearInterval(timerInterval);
       document.querySelectorAll('button').forEach(btn => {
-  if (btn.classList.contains('active')) {
-    btn.classList.remove('active');
-    btn.classList.add('was-active'); // vorher aktiv, jetzt grau
-  } else {
-    btn.classList.remove('was-active'); // falls jemand versehentlich grau bleibt
-  }
+  btn.classList.remove('active');
 });
+
+// Merke dauerhaft: dieser Button war aktiv
+const activeBtn = [...document.querySelectorAll('button')].find(
+  btn => btn.textContent === currentClass
+);
+if (activeBtn) {
+  activeBtn.classList.add('active');
+  activeBtn.classList.add('was-active'); // NICHT mehr entfernen
+}
 
       if (data && data.klasse && data.startzeit) {
         const start = new Date(data.startzeit);
