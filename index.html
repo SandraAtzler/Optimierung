@@ -32,22 +32,18 @@
       font-weight: bold;
       user-select: none;
     }
-
     .container {
       max-width: 600px;
       margin: 0 auto;
       padding: 0 10px;
     }
-
     .group-box {
       border: 2px solid #eee;
       border-radius: 8px;
-      padding: 0;
       margin-bottom: 20px;
       background-color: transparent;
       overflow: hidden;
     }
-
     .group-header {
       background-color: #eee;
       padding: 12px 25px;
@@ -57,11 +53,9 @@
       text-align: center;
       border-bottom: 2px solid #eee;
     }
-
     .group-content {
       padding: 10px 30px 0px 30px;
     }
-
     .class-row {
       margin-bottom: 10px;
       display: flex;
@@ -69,15 +63,13 @@
       gap: 10px;
       flex-wrap: wrap;
     }
-
     .class-label {
       font-weight: bold;
-      font-size: 16px;
+      font-size: 14px;
       color: #330000;
       margin-right: 10px;
       min-width: 100px;
     }
-
     button {
       background-color: darkred;
       color: white;
@@ -90,25 +82,20 @@
       transition: background-color 0.3s;
       user-select: none;
     }
-
     button:focus {
       outline: 2px solid #8b0000;
       outline-offset: 2px;
     }
-
     button.active {
-      background-color: #ae4d4d;
+      background-color: #ae4d4d !important;
     }
-
-    button.visited:not(.active) {
-      background-color: gray;
+    button.visited {
+      background-color: #999 !important;
     }
-
     button:disabled {
       background-color: #440000;
       cursor: not-allowed;
     }
-
     .lock {
       position: fixed;
       bottom: 20px;
@@ -117,15 +104,13 @@
       height: 40px;
       cursor: pointer;
       filter: brightness(0) saturate(100%) invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
-      transition: filter 0.3s;
+      transition: filter 0.3s, opacity 0.3s;
       user-select: none;
     }
-
     .lock.unlocked {
-      filter: brightness(60%) saturate(10%) invert(60%) sepia(20%) saturate(400%) hue-rotate(0deg) brightness(70%) contrast(85%);
-      opacity: 0.7;
+      filter: none;
+      opacity: 0.6;
     }
-
     @media (max-width: 600px) {
       .class-label {
         display: none;
@@ -144,85 +129,71 @@
     <img src="https://info.marianumlan.de/nachmittagsanmeldung/assets/img/logo2.png" alt="Schullogo" class="logo" />
     <div class="status">Die Konferenzen haben noch nicht begonnen.</div>
   </div>
-
   <div class="container">
     <div class="group-box">
       <div class="group-header">Konferenzen am Donnerstag (26.06)</div>
       <div class="group-content">
         <div class="class-row">
           <div class="class-label">5. Klassen</div>
-          <button ondblclick="selectClass('5a')">5a</button>
-          <button ondblclick="selectClass('5b')">5b</button>
-          <button ondblclick="selectClass('5c')">5c</button>
-          <button ondblclick="selectClass('5d')">5d</button>
-          <button ondblclick="selectClass('5e')">5e</button>
+          <button onclick="selectClass('5a')">5a</button>
+          <button onclick="selectClass('5b')">5b</button>
+          <button onclick="selectClass('5c')">5c</button>
+          <button onclick="selectClass('5d')">5d</button>
+          <button onclick="selectClass('5e')">5e</button>
         </div>
         <div class="class-row">
           <div class="class-label">6. Klassen</div>
-          <button ondblclick="selectClass('6a')">6a</button>
-          <button ondblclick="selectClass('6b')">6b</button>
-          <button ondblclick="selectClass('6c')">6c</button>
-          <button ondblclick="selectClass('6d')">6d</button>
-          <button ondblclick="selectClass('6e')">6e</button>
+          <button onclick="selectClass('6a')">6a</button>
+          <button onclick="selectClass('6b')">6b</button>
+          <button onclick="selectClass('6c')">6c</button>
+          <button onclick="selectClass('6d')">6d</button>
+          <button onclick="selectClass('6e')">6e</button>
         </div>
         <div class="class-row">
           <div class="class-label">7. Klassen</div>
-          <button ondblclick="selectClass('7a')">7a</button>
-          <button ondblclick="selectClass('7b')">7b</button>
-          <button ondblclick="selectClass('7c')">7c</button>
-          <button ondblclick="selectClass('7d')">7d</button>
-          <button ondblclick="selectClass('7e')">7e</button>
+          <button onclick="selectClass('7a')">7a</button>
+          <button onclick="selectClass('7b')">7b</button>
+          <button onclick="selectClass('7c')">7c</button>
+          <button onclick="selectClass('7d')">7d</button>
+          <button onclick="selectClass('7e')">7e</button>
         </div>
       </div>
     </div>
-
     <div class="group-box">
       <div class="group-header">Konferenzen am Mittwoch (25.06.)</div>
       <div class="group-content">
         <div class="class-row">
           <div class="class-label">8. Klassen</div>
-          <button ondblclick="selectClass('8a')">8a</button>
-          <button ondblclick="selectClass('8b')">8b</button>
-          <button ondblclick="selectClass('8c')">8c</button>
-          <button ondblclick="selectClass('8d')">8d</button>
-          <button ondblclick="selectClass('8e')">8e</button>
+          <button onclick="selectClass('8a')">8a</button>
+          <button onclick="selectClass('8b')">8b</button>
+          <button onclick="selectClass('8c')">8c</button>
+          <button onclick="selectClass('8d')">8d</button>
+          <button onclick="selectClass('8e')">8e</button>
         </div>
         <div class="class-row">
           <div class="class-label">9. Klassen</div>
-          <button ondblclick="selectClass('9a')">9a</button>
-          <button ondblclick="selectClass('9b')">9b</button>
-          <button ondblclick="selectClass('9c')">9c</button>
-          <button ondblclick="selectClass('9d')">9d</button>
-          <button ondblclick="selectClass('9e')">9e</button>
+          <button onclick="selectClass('9a')">9a</button>
+          <button onclick="selectClass('9b')">9b</button>
+          <button onclick="selectClass('9c')">9c</button>
+          <button onclick="selectClass('9d')">9d</button>
+          <button onclick="selectClass('9e')">9e</button>
         </div>
       </div>
     </div>
-
     <div class="group-box">
       <div class="group-header">Konferenzen am Montag (23.06.)</div>
       <div class="group-content">
         <div class="class-row">
           <div class="class-label">10. Klassen</div>
-          <button ondblclick="selectClass('10a')">10a</button>
-          <button ondblclick="selectClass('10b')">10b</button>
-          <button ondblclick="selectClass('10c')">10c</button>
-          <button ondblclick="selectClass('10d')">10d</button>
+          <button onclick="selectClass('10a')">10a</button>
+          <button onclick="selectClass('10b')">10b</button>
+          <button onclick="selectClass('10c')">10c</button>
+          <button onclick="selectClass('10d')">10d</button>
         </div>
       </div>
     </div>
   </div>
-
-  <img
-    src="https://cdn-icons-png.flaticon.com/512/61/61457.png"
-    alt="Schloss"
-    id="lockIcon"
-    class="lock"
-    ondblclick="toggleLock()"
-    aria-label="Schloss"
-    role="button"
-    tabindex="0"
-  />
-
+  <img src="https://cdn-icons-png.flaticon.com/512/61/61457.png" alt="Schloss" id="lockIcon" class="lock" ondblclick="toggleLock()" />
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <script>
@@ -235,90 +206,76 @@
       appId: "1:471386308742:web:73c3409b42e1db2d599107",
       databaseURL: "https://notenkonferenzen-default-rtdb.europe-west1.firebasedatabase.app/"
     };
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-
     const statusEl = document.querySelector('.status');
     const titleEl = document.getElementById('pageTitle');
     const lockIcon = document.getElementById('lockIcon');
-    let timerInterval;
     let unlocked = false;
     let currentClass = null;
+    const visitedClasses = new Set();
+
+    db.ref('konferenz').on('value', snap => {
+      const data = snap.val();
+      document.querySelectorAll('button').forEach(btn => {
+        btn.classList.remove('active');
+        if (visitedClasses.has(btn.textContent)) {
+          btn.classList.add('visited');
+        }
+      });
+      if (data && data.klasse && data.startzeit) {
+        currentClass = data.klasse;
+        visitedClasses.add(currentClass);
+        const activeBtn = [...document.querySelectorAll('button')].find(btn => btn.textContent === currentClass);
+        if (activeBtn) activeBtn.classList.add('active');
+        const start = new Date(data.startzeit);
+        updateTimer(start);
+      } else {
+        statusEl.textContent = "Die Konferenzen haben noch nicht begonnen.";
+        currentClass = null;
+      }
+      if (data && data.visited) {
+        data.visited.forEach(cls => visitedClasses.add(cls));
+        document.querySelectorAll('button').forEach(btn => {
+          if (visitedClasses.has(btn.textContent)) {
+            btn.classList.add('visited');
+          }
+        });
+      }
+    });
+
+    function updateTimer(start) {
+      clearInterval(window.timerInterval);
+      window.timerInterval = setInterval(() => {
+        const diff = Math.floor((Date.now() - start) / 1000);
+        const min = Math.floor(diff / 60), sec = diff % 60;
+        statusEl.textContent = `Aktuell in der Konferenz: ${currentClass} (${min} Min ${sec} Sek)`;
+      }, 1000);
+    }
+
+    function selectClass(className) {
+      if (!unlocked || className === currentClass) return;
+      visitedClasses.add(className);
+      db.ref('konferenz').set({
+        klasse: className,
+        startzeit: new Date().toISOString(),
+        visited: Array.from(visitedClasses)
+      });
+      toggleLock(false);
+    }
 
     function toggleLock(force = null) {
       unlocked = force !== null ? force : !unlocked;
       lockIcon.classList.toggle('unlocked', unlocked);
     }
 
-    lockIcon.addEventListener("dblclick", (e) => {
-      if (e.shiftKey && unlocked) {
-        db.ref('konferenz').remove();
-        db.ref('visited').remove();
-        toggleLock(false);
-      } else {
-        toggleLock();
-      }
-    });
-
-    titleEl.addEventListener("dblclick", () => {
+    titleEl.ondblclick = () => {
       if (!unlocked) return;
       db.ref('konferenz').remove();
-      db.ref('visited').remove();
+      visitedClasses.clear();
+      document.querySelectorAll('button').forEach(btn => btn.classList.remove('visited', 'active'));
       toggleLock(false);
-    });
-
-    db.ref('konferenz').on('value', snap => {
-      const data = snap.val();
-      clearInterval(timerInterval);
-      document.querySelectorAll('button').forEach(btn =>
-        btn.classList.remove('active')
-      );
-
-      if (data && data.klasse && data.startzeit) {
-        const start = new Date(data.startzeit);
-        currentClass = data.klasse;
-
-        const activeBtn = [...document.querySelectorAll('button')].find(
-          btn => btn.textContent === currentClass
-        );
-        if (activeBtn) activeBtn.classList.add('active');
-
-        timerInterval = setInterval(() => {
-          const diff = Math.floor((Date.now() - start) / 1000);
-          const min = Math.floor(diff / 60), sec = diff % 60;
-          statusEl.textContent =
-            `Aktuell in der Konferenz: ${currentClass} (${min} Min ${sec} Sek)`;
-        }, 1000);
-      } else {
-        statusEl.textContent = "Die Konferenzen haben noch nicht begonnen.";
-        currentClass = null;
-      }
-    });
-
-    db.ref('visited').on('value', snap => {
-      const visited = snap.val() || {};
-      document.querySelectorAll('button').forEach(btn => {
-        if (visited[btn.textContent]) {
-          btn.classList.add('visited');
-        } else {
-          btn.classList.remove('visited');
-        }
-      });
-    });
-
-    function selectClass(className) {
-      if (!unlocked) return;
-      if (className === currentClass) return;
-
-      db.ref('konferenz').set({
-        klasse: className,
-        startzeit: new Date().toISOString()
-      });
-
-      db.ref('visited/' + className).set(true);
-      toggleLock(false);
-    }
+    };
   </script>
 </body>
 </html>
