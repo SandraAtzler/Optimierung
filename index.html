@@ -128,6 +128,10 @@ button.used::after {
       filter: brightness(0) saturate(100%) invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%) ;
       opacity: 0.6;
     }
+    .starting-message {
+  color: darkred;
+  font-weight: bold;
+}
 
     @media (max-width: 600px) {
       .class-label {
@@ -276,7 +280,7 @@ button.used::after {
     }
 
     if (diffSeconds < 10) {
-      statusEl.textContent = "Die Konferenz der ${currentclass} startet …";
+      statusEl.innerHTML = `<span class="starting-message">Die Konferenz der ${currentClass} startet …</span>`;
       setTimeout(() => {
         startTimer(start);
       }, (10 - diffSeconds) * 1000);
