@@ -231,19 +231,37 @@
     let currentClass = null;
 
     db.ref().on('value', snap => {
-      const data = snap.val();
-      const konf = data.konferenz || {};
-      const visited = data.besuchteKlassen || [];
+  const data = snap.val();
+  const konf = data.konferenz || {};
+  const visited = data.besuchteKlassen || [];
 
-      clearInterval(timerInterval);
-      document.querySelectorAll('button').forEach(btn => {
-        btn.classList.remove('active');
-        if (visited.includes(btn.textContent)) {
-          btn.classList.add('visited');
-        } else {
-          btn.classList.remove('visited');
-        }
-      });
+  clearInterval(timerInterval);
+  document.querySelectorAll('button').forEach(btn => {
+    const className = btn.textContent;
+    btn.classList.remove('active', 'visited');
+
+    if (className === konf.klasse) {
+      btn.classList.add('active'); // aktueller = hellrot
+    } else if (visited.includes(className)) {
+      btn.classList.add('visited'); // früher besucht = grau
+    }
+  });
+
+  if (konf.klasse && konf.startzeit) {
+    const start = new Date(konf.startzeit);
+    currentClass = konf.klasse;
+
+    timerInterval = setInterval(() => {
+      const diff = Math.floor((Date.now() - start) / 1000);
+      const min = Math.floor(diff / 60), sec = diff % 60;
+      statusEl.textContent =
+        `Aktuell in der Konferenz: ${currentClass} (${min} Min ${sec} Sek)`;
+    }, 1000);
+  } else {
+    statusEl.textContent = "Die Konferenzen haben noch nicht begonnen.";
+    currentClass = null;
+  }
+});
 
       if (konf.klasse && konf.startzeit) {
         const start = new Date(konf.startzeit);
