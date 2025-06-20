@@ -88,10 +88,10 @@
       outline-offset: 2px;
     }
     button.active {
-      background-color: #ae4d4d;
+      background-color: #f9986A;
     }
-   button.used {
-  background-color: #e3e3e3;
+  button.used {
+  background-color: grey;
   position: relative;
   overflow: hidden;
 }
@@ -99,13 +99,13 @@
 button.used::after {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 141%; /* etwas größer als 100%, für diagonalen Effekt */
+  top: 50%;
+  left: -25%;
+  width: 150%;
   height: 2px;
-  background-color: #333;
+  background-color: #222;
   transform: rotate(-45deg);
-  transform-origin: top left;
+  transform-origin: center;
   pointer-events: none;
 }
     button:disabled {
