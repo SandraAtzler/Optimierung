@@ -90,10 +90,24 @@
     button.active {
       background-color: #ae4d4d;
     }
-    button.used {
-      background-color: #e3e3e3;
-      text-decoration: line-through; 
-    }
+   button.used {
+  background-color: #e3e3e3;
+  position: relative;
+  overflow: hidden;
+}
+
+button.used::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 141%; /* etwas größer als 100%, für diagonalen Effekt */
+  height: 2px;
+  background-color: #333;
+  transform: rotate(-45deg);
+  transform-origin: top left;
+  pointer-events: none;
+}
     button:disabled {
       background-color: #440000;
       cursor: not-allowed;
