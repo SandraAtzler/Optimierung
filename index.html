@@ -246,38 +246,49 @@ button.used::after {
     let unlocked = false;
     let currentClass = null;
 
-    db.ref().on('value', snap => {
-      const data = snap.val() || {};
-      const konferenz = data.konferenz || {};
-      const clicked = data.bereitsGeklickt || [];
+    db.ref('konferenz').on('value', snap => {
+  const data = snap.val();
+  clearInterval(timerInterval);
+  document.querySelectorAll('button').forEach(btn =>
+    btn.classList.remove('active')
+  );
 
-      clearInterval(timerInterval);
-      document.querySelectorAll('button').forEach(btn => {
-        const name = btn.textContent;
-        btn.classList.remove('active', 'used');
-        if (clicked.includes(name)) {
-          btn.classList.add('used');
-        }
-      });
+  if (data && data.klasse && data.startzeit) {
+    const start = new Date(data.startzeit);
+    currentClass = data.klasse;
 
-      if (konferenz.klasse && konferenz.startzeit) {
-        currentClass = konferenz.klasse;
-        const start = new Date(konferenz.startzeit);
-        const activeBtn = [...document.querySelectorAll('button')].find(b => b.textContent === currentClass);
-        if (activeBtn) {
-          activeBtn.classList.add('active');
-          activeBtn.classList.remove('used');
-        }
-        timerInterval = setInterval(() => {
-          const diff = Math.floor((Date.now() - start) / 1000);
-          const min = Math.floor(diff / 60), sec = diff % 60;
-          statusEl.textContent = `Aktuell in der Konferenz: ${currentClass} (${min} Min ${sec} Sek)`;
-        }, 1000);
-      } else {
-        statusEl.textContent = "Die Konferenzen haben noch nicht begonnen.";
-        currentClass = null;
-      }
-    });
+    const activeBtn = [...document.querySelectorAll('button')].find(
+      btn => btn.textContent === currentClass
+    );
+    if (activeBtn) activeBtn.classList.add('active');
+
+    const now = Date.now();
+    const startTime = new Date(data.startzeit).getTime();
+    const diffSeconds = Math.floor((now - startTime) / 1000);
+
+    if (diffSeconds < 10) {
+      statusEl.textContent = `Die Konferenz startet …`;
+      setTimeout(() => {
+        startTimer(start);
+      }, (10 - diffSeconds) * 1000);
+    } else {
+      startTimer(start);
+    }
+  } else {
+    statusEl.textContent = "Die Konferenzen haben noch nicht begonnen.";
+    currentClass = null;
+  }
+});
+
+function startTimer(start) {
+  timerInterval = setInterval(() => {
+    const diff = Math.floor((Date.now() - start) / 1000);
+    const min = Math.floor(diff / 60),
+          sec = diff % 60;
+    statusEl.textContent =
+      `Aktuell in der Konferenz: ${currentClass} (${min} Min ${sec} Sek)`;
+  }, 1000);
+}
 
     function selectClass(className) {
       if (!unlocked || className === currentClass) return;
