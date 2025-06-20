@@ -276,7 +276,7 @@ button.used::after {
     }
 
     if (diffSeconds < 10) {
-      statusEl.textContent = "Die Konferenz startet …";
+      statusEl.textContent = "Die Konferenz der ${currentclass} startet …";
       setTimeout(() => {
         startTimer(start);
       }, (10 - diffSeconds) * 1000);
