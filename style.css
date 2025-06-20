@@ -79,7 +79,7 @@ button.active {
   background-color: #c58080 !important;
 }
 button.visited {
-  background-color: dedede !important;
+  background-color: #e3e3e3 !important;
 }
 button:focus {
   outline: 2px solid #8b0000;
