@@ -81,10 +81,10 @@ button:focus {
   outline-offset: 2px;
 }
 button.active {
-  background-color: #ff9999;
+  background-color: #ff9999 !important;
 }
 button.visited {
-  background-color: #999;
+  background-color: #888 !important;
 }
 button:disabled {
   background-color: #440000;
