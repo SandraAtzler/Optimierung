@@ -273,12 +273,17 @@
       toggleLock(false);
     };
 
-    lockIcon.ondblclick = () => {
-      if (!unlocked) return;
-      db.ref('konferenz').remove();
-      db.ref('visited').remove(); // Reset visited buttons
-      toggleLock(false);
-    };
+   lockIcon.addEventListener("dblclick", (e) => {
+  if (e.shiftKey && unlocked) {
+    // Shift+Doppelklick = Reset
+    db.ref('konferenz').remove();
+    db.ref('visited').remove();
+    toggleLock(false);
+  } else {
+    // Nur Doppelklick = Lock umschalten
+    toggleLock();
+  }
+});
 
     let visitedClasses = [];
 
