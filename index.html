@@ -86,12 +86,13 @@
       outline: 2px solid #8b0000;
       outline-offset: 2px;
     }
-    button.active {
-      background-color: #ae4d4d !important;
-    }
     button.visited {
-      background-color: #999 !important;
-    }
+  background-color: #999 !important;
+}
+
+button.active {
+  background-color: #ae4d4d !important;
+}
     button:disabled {
       background-color: #440000;
       cursor: not-allowed;
@@ -218,16 +219,20 @@
     db.ref('konferenz').on('value', snap => {
       const data = snap.val();
       document.querySelectorAll('button').forEach(btn => {
-        btn.classList.remove('active');
-        if (visitedClasses.has(btn.textContent)) {
-          btn.classList.add('visited');
-        }
-      });
+  btn.classList.remove('active');
+  btn.classList.remove('visited');
+  if (visitedClasses.has(btn.textContent)) {
+    btn.classList.add('visited');
+  }
+});
       if (data && data.klasse && data.startzeit) {
         currentClass = data.klasse;
         visitedClasses.add(currentClass);
         const activeBtn = [...document.querySelectorAll('button')].find(btn => btn.textContent === currentClass);
-        if (activeBtn) activeBtn.classList.add('active');
+        if (activeBtn) {
+  activeBtn.classList.add('active');
+  activeBtn.classList.remove('visited'); // <- Wichtig!
+}
         const start = new Date(data.startzeit);
         updateTimer(start);
       } else {
