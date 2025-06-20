@@ -23,11 +23,12 @@
 }
 .logo {
   position: absolute;
-  left: 600px;
+  left: calc(50% - var(--logo-offset, 25%));
   top: 50%;
   transform: translateY(-50%);
   height: 60px;
   user-select: none;
+}
 }
 .status {
   margin-left: 80px; /* Abstand zum Logo */
