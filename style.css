@@ -81,7 +81,7 @@ button:focus {
   outline-offset: 2px;
 }
 button.active {
-  background-color: #c58080;
+  background-color: #ff9999;
 }
 button.visited {
   background-color: #999;
