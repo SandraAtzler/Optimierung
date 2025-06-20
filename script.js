@@ -11,72 +11,90 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-const statusEl = document.querySelector('.status');
+const statusEl = document.getElementById('statusText');
+const startBox = document.getElementById('startBox');
 const titleEl = document.getElementById('pageTitle');
 const lockIcon = document.getElementById('lockIcon');
+
+let timerInterval;
 let unlocked = false;
 let currentClass = null;
-let visitedClasses = new Set();
-let timerInterval;
 
-db.ref('konferenz').on('value', snap => {
-  const data = snap.val();
+db.ref().on('value', snap => {
+  const data = snap.val() || {};
+  const konferenz = data.konferenz || {};
+  const clicked = data.bereitsGeklickt || [];
+
   clearInterval(timerInterval);
-  currentClass = null;
-
-  // Reset all buttons
   document.querySelectorAll('button').forEach(btn => {
-    btn.classList.remove('active');
-    btn.classList.remove('visited');
-    if (visitedClasses.has(btn.textContent)) {
-      btn.classList.add('visited');
+    const name = btn.textContent;
+    btn.classList.remove('active', 'used');
+    if (clicked.includes(name)) {
+      btn.classList.add('used');
     }
   });
 
-  if (data && data.klasse && data.startzeit) {
-    currentClass = data.klasse;
-    visitedClasses.add(currentClass);
+  if (konferenz.klasse && konferenz.startzeit) {
+    currentClass = konferenz.klasse;
+    const start = new Date(konferenz.startzeit);
+    const now = Date.now();
+    const diffSeconds = Math.floor((now - start.getTime()) / 1000);
 
     const activeBtn = [...document.querySelectorAll('button')].find(
-      btn => btn.textContent === currentClass
+      b => b.textContent === currentClass
     );
     if (activeBtn) {
       activeBtn.classList.add('active');
-      activeBtn.classList.remove('visited');
+      activeBtn.classList.remove('used');
     }
 
-    timerInterval = setInterval(() => {
-      const diff = Math.floor((Date.now() - new Date(data.startzeit)) / 1000);
-      const min = Math.floor(diff / 60), sec = diff % 60;
-      statusEl.textContent = `Aktuell in der Konferenz: ${currentClass} (${min} Min ${sec} Sek)`;
-    }, 1000);
+    if (diffSeconds < 10) {
+      startBox.textContent = `Die Konferenz der ${currentClass} startet jetzt!`;
+      startBox.style.display = "block";
+      statusEl.textContent = "";
+      setTimeout(() => {
+        startBox.style.display = "none";
+        startTimer(start);
+      }, (10 - diffSeconds) * 1000);
+    } else {
+      startBox.style.display = "none";
+      startTimer(start);
+    }
   } else {
+    startBox.style.display = "none";
     statusEl.textContent = "Die Konferenzen haben noch nicht begonnen.";
+    currentClass = null;
   }
-
-  // Update visited list in UI
-  visitedClasses.forEach(cls => {
-    const btn = [...document.querySelectorAll('button')].find(b => b.textContent === cls);
-    if (btn && cls !== currentClass) btn.classList.add('visited');
-  });
 });
 
-db.ref('visited').on('value', snap => {
-  const data = snap.val();
-  visitedClasses = new Set(data || []);
-});
+function startTimer(start) {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    const diff = Math.floor((Date.now() - start.getTime()) / 1000);
+    const min = Math.floor(diff / 60),
+          sec = diff % 60;
+    statusEl.textContent = `Aktuell in der Konferenz: ${currentClass} (${min} Min ${sec} Sek)`;
+  }, 1000);
+}
 
 function selectClass(className) {
-  if (!unlocked) return;
-  if (className === currentClass) return;
+  if (!unlocked || className === currentClass) return;
 
-  visitedClasses.add(className);
-  db.ref('visited').set([...visitedClasses]);
-  db.ref('konferenz').set({
-    klasse: className,
-    startzeit: new Date().toISOString()
+  db.ref().once('value').then(snap => {
+    const data = snap.val() || {};
+    const clicked = data.bereitsGeklickt || [];
+    if (!clicked.includes(className)) {
+      clicked.push(className);
+    }
+    db.ref().update({
+      konferenz: {
+        klasse: className,
+        startzeit: new Date().toISOString()
+      },
+      bereitsGeklickt: clicked
+    });
+    toggleLock(false);
   });
-  toggleLock(false);
 }
 
 function toggleLock(force = null) {
@@ -88,11 +106,8 @@ function toggleLock(force = null) {
   lockIcon.classList.toggle('unlocked', unlocked);
 }
 
-lockIcon.ondblclick = toggleLock;
-
 titleEl.ondblclick = () => {
   if (!unlocked) return;
-  db.ref('konferenz').remove();
-  db.ref('visited').remove();
+  db.ref().set({});
   toggleLock(false);
 };
