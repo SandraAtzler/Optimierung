@@ -134,10 +134,18 @@ button.used::after {
       filter: brightness(0) saturate(100%) invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%) ;
       opacity: 0.6;
     }
-    .starting-message {
-  color: darkred;
-  font-weight: bold;
-}
+    .start-box {
+      background-color: #8b0000; /* Dunkelrot */
+      color: white;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 1.2em;
+      display: inline-block;
+      margin: 10px 0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
 
     @media (max-width: 600px) {
       .class-label {
@@ -302,7 +310,7 @@ button.used::after {
     }
 
     if (diffSeconds < 10) {
-      statusEl.innerHTML = `<span class="starting-message">Die Konferenz der ${currentClass} startet jetzt!</span>`;
+      statusEl.innerHTML = `<div class="starting-message">Die Konferenz der ${currentClass} startet jetzt!</div`;
       setTimeout(() => {
         startTimer(start);
       }, (10 - diffSeconds) * 1000);
