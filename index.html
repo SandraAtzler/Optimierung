@@ -320,14 +320,22 @@
           activeBtn.classList.remove('used');
         }
 
-        if (diffSeconds < 10.9) {
-          startBoxEl.style.display = 'inline-block';
-          startBoxEl.textContent = `Die Konferenz der ${currentClass} startet jetzt!`;
-          statusTextEl.textContent = '';
-          setTimeout(() => {
-            startTimer(start);
-          }, (10 - diffSeconds) * 1000);
-        } else {
+       if (diffSeconds < 10.9) {
+  if (window.innerWidth <= 600) {
+    // Kleine Bildschirme: Text normal anzeigen
+    startBoxEl.style.display = 'none';
+    statusTextEl.textContent = `Die Konferenz der ${currentClass} startet jetzt!`;
+  } else {
+    // Große Bildschirme: roten Kasten anzeigen
+    startBoxEl.style.display = 'inline-block';
+    startBoxEl.textContent = `Die Konferenz der ${currentClass} startet jetzt!`;
+    statusTextEl.textContent = '';
+  }
+
+  setTimeout(() => {
+    startTimer(start);
+  }, (10 - diffSeconds) * 1000);
+} else {
           startTimer(start);
         }
       } else {
