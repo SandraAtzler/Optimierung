@@ -261,126 +261,105 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyCIOeOJnqY3yHjbl6Ho14PYO6lpcOZtjfA",
-    authDomain: "notenkonferenzen.firebaseapp.com",
-    projectId: "notenkonferenzen",
-    storageBucket: "notenkonferenzen.appspot.com",
-    messagingSenderId: "471386308742",
-    appId: "1:471386308742:web:73c3409b42e1db2d599107",
-    databaseURL: "https://notenkonferenzen-default-rtdb.europe-west1.firebasedatabase.app/"
-  };
+  // Firebase-Konfiguration
+const firebaseConfig = {
+  apiKey: "DEINE_API_KEY",
+  authDomain: "DEINE_AUTH_DOMAIN",
+  databaseURL: "https://notenkonferenzen-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "DEIN_PROJECT_ID",
+  storageBucket: "DEIN_STORAGE_BUCKET",
+  messagingSenderId: "DEIN_SENDER_ID",
+  appId: "DEINE_APP_ID"
+};
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
+// Firebase initialisieren
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
 
-  const statusEl = document.querySelector('.status');
-  const titleEl = document.getElementById('pageTitle');
-  const lockIcon = document.getElementById('lockIcon');
+const statusText = document.getElementById("status-text");
+const startBox = document.getElementById("start-box");
 
-  let timerInterval;
-  let unlocked = false;
-  let currentClass = null;
+// Funktion: Konferenz starten, nur wenn sie noch nicht gestartet wurde
+function startKonferenz(klasse) {
+  const konferenzRef = database.ref("konferenz");
 
-  function startTimer(startTimestamp) {
-    clearInterval(timerInterval);
+  konferenzRef.once("value").then((snapshot) => {
+    const daten = snapshot.val();
 
-    const update = () => {
-      const diff = Math.floor((Date.now() - startTimestamp) / 1000);
-      const min = Math.floor(diff / 60);
-      const sec = diff % 60;
-      statusEl.textContent = `Aktuell in der Konferenz: ${currentClass} (${min} Min ${sec} Sek)`;
-    };
+    if (daten && daten.startzeit) {
+      console.log("Konferenz läuft bereits. Keine neue Startzeit gesetzt.");
+      return; // Bereits gestartet, nichts tun
+    }
 
-    update(); // sofort anzeigen
-    timerInterval = setInterval(update, 1000);
-  }
-
-  db.ref().on('value', snap => {
-    const data = snap.val() || {};
-    const konferenz = data.konferenz || {};
-    const clicked = data.bereitsGeklickt || [];
-
-    clearInterval(timerInterval);
-    document.querySelectorAll('button').forEach(btn => {
-      const name = btn.textContent;
-      btn.classList.remove('active', 'used');
-      if (clicked.includes(name)) {
-        btn.classList.add('used');
-      }
+    const startzeit = new Date().toISOString();
+    konferenzRef.set({
+      klasse: klasse,
+      startzeit: startzeit
     });
+    console.log("Konferenz gestartet:", klasse, startzeit);
+  });
+}
 
-    if (konferenz.klasse && konferenz.startzeit) {
-      currentClass = konferenz.klasse;
+// Funktion: Button-Klick behandeln
+function buttonClickHandler(event) {
+  const button = event.target;
+  const klasse = button.dataset.klasse;
 
-      const startTime = new Date(konferenz.startzeit).getTime();
-      const now = Date.now();
-      const diffSeconds = Math.floor((now - startTime) / 1000);
+  // Startzeit nur einmal setzen, wenn noch nicht vorhanden
+  startKonferenz(klasse);
 
-      const activeBtn = [...document.querySelectorAll('button')].find(
-        b => b.textContent === currentClass
-      );
-      if (activeBtn) {
-        activeBtn.classList.add('active');
-        activeBtn.classList.remove('used');
-      }
+  // Button grau einfärben
+  button.disabled = true;
+  button.classList.add("disabled");
 
-      if (diffSeconds < 10 && diffSeconds >= 0) {
-        // Konferenz hat vor <10 Sekunden begonnen → Roter Kasten für den Rest der 10 Sek.
-        const remaining = 10 - diffSeconds;
-        statusEl.innerHTML = `<div class="start-box">Die Konferenz der ${currentClass} startet jetzt!</div>`;
-        setTimeout(() => {
-          startTimer(startTime);
-        }, remaining * 1000);
-      } else if (diffSeconds >= 10) {
-        // Konferenz läuft → Timer sofort starten
-        startTimer(startTime);
-      } else {
-        // Startzeit liegt in der Zukunft → noch nicht starten
-        statusEl.textContent = "Die Konferenzen haben noch nicht begonnen.";
-        currentClass = null;
-      }
-    } else {
-      // Keine Konferenz aktiv
-      statusEl.textContent = "Die Konferenzen haben noch nicht begonnen.";
-      currentClass = null;
+  // Bereits geklickt speichern
+  const bereitsRef = database.ref("bereitsGeklickt");
+  bereitsRef.once("value").then((snapshot) => {
+    const bereits = snapshot.val() || [];
+    if (!bereits.includes(klasse)) {
+      bereits.push(klasse);
+      bereitsRef.set(bereits);
     }
   });
+}
 
-  function selectClass(className) {
-    if (!unlocked || className === currentClass) return;
-
-    db.ref().once('value').then(snap => {
-      const data = snap.val() || {};
-      const clicked = data.bereitsGeklickt || [];
-      if (!clicked.includes(className)) {
-        clicked.push(className);
-      }
-      db.ref().update({
-        konferenz: {
-          klasse: className,
-          startzeit: new Date().toISOString()
-        },
-        bereitsGeklickt: clicked
-      });
-      toggleLock(false);
-    });
-  }
-
-  function toggleLock(force = null) {
-    if (force !== null) {
-      unlocked = force;
-    } else {
-      unlocked = !unlocked;
+// Bereits geklickte Buttons grau darstellen
+database.ref("bereitsGeklickt").on("value", (snapshot) => {
+  const bereits = snapshot.val() || [];
+  bereits.forEach((klasse) => {
+    const button = document.querySelector(`button[data-klasse="${klasse}"]`);
+    if (button) {
+      button.disabled = true;
+      button.classList.add("disabled");
     }
-    lockIcon.classList.toggle('unlocked', unlocked);
-  }
+  });
+});
 
-  titleEl.ondblclick = () => {
-    if (!unlocked) return;
-    db.ref().set({});
-    toggleLock(false);
-  };
-</script>
+// Konferenz-Status aus Firebase abrufen
+database.ref("konferenz").on("value", (snapshot) => {
+  const daten = snapshot.val();
+  if (!daten || !daten.startzeit || !daten.klasse) return;
+
+  const startzeit = new Date(daten.startzeit);
+  const jetzt = new Date();
+  const differenz = (jetzt - startzeit) / 1000;
+
+  if (differenz < 10) {
+    // Erste 10 Sekunden: Rote Box
+    startBox.style.display = "inline-block";
+    statusText.textContent = "";
+  } else {
+    // Danach: Text anzeigen
+    startBox.style.display = "none";
+    statusText.textContent = `Aktuell in der Konferenz: ${daten.klasse}`;
+  }
+});
+
+// Buttons mit Event Listener verbinden
+document.querySelectorAll("button[data-klasse]").forEach((button) => {
+  button.addEventListener("click", buttonClickHandler);
+});
+</script>  
+
 </body>
 </html>
