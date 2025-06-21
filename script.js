@@ -11,8 +11,8 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-const statusEl = document.getElementById('statusText');
-const startBox = document.getElementById('startBox');
+const statusTextEl = document.getElementById('statusText');
+const startBoxEl = document.getElementById('startBox');
 const titleEl = document.getElementById('pageTitle');
 const lockIcon = document.getElementById('lockIcon');
 
@@ -38,7 +38,8 @@ db.ref().on('value', snap => {
     currentClass = konferenz.klasse;
     const start = new Date(konferenz.startzeit);
     const now = Date.now();
-    const diffSeconds = Math.floor((now - start.getTime()) / 1000);
+    const startTime = start.getTime();
+    const diffSeconds = Math.floor((now - startTime) / 1000);
 
     const activeBtn = [...document.querySelectorAll('button')].find(
       b => b.textContent === currentClass
@@ -48,38 +49,41 @@ db.ref().on('value', snap => {
       activeBtn.classList.remove('used');
     }
 
-    if (diffSeconds < 10) {
-      startBox.textContent = `Die Konferenz der ${currentClass} startet jetzt!`;
-      startBox.style.display = "block";
-      statusEl.textContent = "";
+    if (diffSeconds < 10.9) {
+      if (window.innerWidth <= 600) {
+        startBoxEl.style.display = 'none';
+        statusTextEl.textContent = `Die Konferenz der ${currentClass} startet jetzt!`;
+      } else {
+        startBoxEl.style.display = 'inline-block';
+        startBoxEl.textContent = `Die Konferenz der ${currentClass} startet jetzt!`;
+        statusTextEl.textContent = '';
+      }
       setTimeout(() => {
-        startBox.style.display = "none";
         startTimer(start);
       }, (10 - diffSeconds) * 1000);
     } else {
-      startBox.style.display = "none";
       startTimer(start);
     }
   } else {
-    startBox.style.display = "none";
-    statusEl.textContent = "Die Konferenzen haben noch nicht begonnen.";
+    startBoxEl.style.display = 'none';
+    statusTextEl.textContent = "Die Konferenzen haben noch nicht begonnen.";
     currentClass = null;
   }
 });
 
 function startTimer(start) {
   clearInterval(timerInterval);
+  startBoxEl.style.display = 'none';
   timerInterval = setInterval(() => {
-    const diff = Math.floor((Date.now() - start.getTime()) / 1000);
+    const diff = Math.floor((Date.now() - start) / 1000);
     const min = Math.floor(diff / 60),
           sec = diff % 60;
-    statusEl.textContent = `Aktuell in der Konferenz: ${currentClass} (${min} Min ${sec} Sek)`;
+    statusTextEl.textContent = `Aktuell in der Konferenz: ${currentClass} (${min} Min ${sec} Sek)`;
   }, 1000);
 }
 
 function selectClass(className) {
   if (!unlocked || className === currentClass) return;
-
   db.ref().once('value').then(snap => {
     const data = snap.val() || {};
     const clicked = data.bereitsGeklickt || [];
