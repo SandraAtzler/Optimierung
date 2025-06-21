@@ -3,68 +3,61 @@ body {
   background-color: #fefefe;
   margin: 20px;
 }
-
 h1 {
   text-align: center;
   margin-bottom: 20px;
   user-select: none;
   cursor: default;
 }
-
 .logo-status-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
+  position: relative;
   margin-bottom: 20px;
+  height: 70px;
 }
-
 .logo {
+  position: absolute;
+  left: calc(50% - 260px);
+  top: 50%;
+  transform: translateY(-50%);
   height: 60px;
   user-select: none;
 }
-
-.status-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.status {
-  font-size: 18px;
-  font-weight: bold;
+.status-text,
+.start-box {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   user-select: none;
-  color: #222;
+  left: calc(50% - 160px);
 }
-
 .start-box {
   background-color: #8b0000;
   color: white;
   padding: 10px 20px;
   border-radius: 5px;
   font-weight: bold;
-  font-size: 1.1em;
-  display: inline-block;
-  margin-bottom: 8px;
+  font-size: 1.2em;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  user-select: none;
+  height: auto;
+  display: none;
+  white-space: nowrap;
 }
-
+.status-text {
+  font-size: 18px;
+  font-weight: bold;
+  white-space: normal;
+}
 .container {
   max-width: 600px;
   margin: 0 auto;
   padding: 0 10px;
 }
-
 .group-box {
   border: 2px solid #eee;
   border-radius: 8px;
-  padding: 0;
   margin-bottom: 20px;
-  background-color: transparent;
   overflow: hidden;
 }
-
 .group-header {
   background-color: #eee;
   padding: 12px 25px;
@@ -74,11 +67,9 @@ h1 {
   text-align: center;
   border-bottom: 2px solid #eee;
 }
-
 .group-content {
-  padding: 10px 30px 0px 30px;
+  padding: 10px 30px 0 30px;
 }
-
 .class-row {
   margin-bottom: 10px;
   display: flex;
@@ -86,15 +77,12 @@ h1 {
   gap: 10px;
   flex-wrap: wrap;
 }
-
 .class-label {
   font-weight: bold;
   font-size: 16px;
   color: #330000;
-  margin-right: 10px;
   min-width: 100px;
 }
-
 button {
   background-color: darkred;
   color: white;
@@ -107,22 +95,18 @@ button {
   transition: background-color 0.3s;
   user-select: none;
 }
-
 button:focus {
   outline: 2px solid #8b0000;
   outline-offset: 2px;
 }
-
 button.active {
   background-color: #e07b7b;
 }
-
 button.used {
   background-color: #e3e3e3;
   position: relative;
   overflow: hidden;
 }
-
 button.used::after {
   content: "";
   position: absolute;
@@ -134,12 +118,10 @@ button.used::after {
   transform: rotate(-30deg);
   pointer-events: none;
 }
-
 button:disabled {
   background-color: #440000;
   cursor: not-allowed;
 }
-
 .lock {
   position: fixed;
   bottom: 20px;
@@ -147,14 +129,10 @@ button:disabled {
   width: 40px;
   height: 40px;
   cursor: pointer;
-  filter: brightness(0) saturate(100%) invert(0%);
-  transition: filter 0.3s;
-  user-select: none;
   opacity: 0;
+  transition: filter 0.3s;
 }
-
 .lock.unlocked {
-  filter: invert(0%);
   opacity: 0.6;
 }
 
@@ -166,5 +144,28 @@ button:disabled {
     padding: 6px 10px;
     font-size: 14px;
     min-width: 45px;
+  }
+  .logo-status-wrapper {
+    display: flex;
+    align-items: left;
+    justify-content: left;
+    margin-bottom: 20px;
+    gap: 20px;
+  }
+  .logo {
+    margin-left: 20px;
+    height: 60px;
+    position: static;
+    transform: none;
+  }
+  .status-text {
+    margin-left: 80px;
+    margin-top: 5px;
+    max-width: 90%;
+    white-space: normal;
+    word-break: break-word;
+  }
+  .start-box {
+    display: none !important;
   }
 }
