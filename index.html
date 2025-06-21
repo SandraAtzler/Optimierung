@@ -258,7 +258,7 @@
     ondblclick="toggleLock()"
   />
 
- <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script>
   const firebaseConfig = {
@@ -298,10 +298,9 @@
 
     if (konferenz.klasse && konferenz.startzeit) {
       currentClass = konferenz.klasse;
-      const start = new Date(konferenz.startzeit);
+      const start = new Date(konferenz.startzeit).getTime();
       const now = Date.now();
-      const startTime = start.getTime();
-      const diffSeconds = Math.floor((now - startTime) / 1000);
+      const diffSeconds = Math.floor((now - start) / 1000);
 
       const activeBtn = [...document.querySelectorAll('button')].find(
         b => b.textContent === currentClass
@@ -325,18 +324,18 @@
     }
   });
 
-  function startTimer(start) {
+  function startTimer(startTimestamp) {
     clearInterval(timerInterval);
 
     const update = () => {
-      const diff = Math.floor((Date.now() - start) / 1000);
+      const diff = Math.floor((Date.now() - startTimestamp) / 1000);
       const min = Math.floor(diff / 60);
       const sec = diff % 60;
       statusEl.textContent =
         `Aktuell in der Konferenz: ${currentClass} (${min} Min ${sec} Sek)`;
     };
 
-    update(); // ⬅️ Erste Anzeige sofort
+    update(); // sofort anzeigen
     timerInterval = setInterval(update, 1000);
   }
 
