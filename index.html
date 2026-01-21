@@ -175,12 +175,36 @@
     word-break: break-word;
   }
 
-      .start-box {
-        display:none !important;
-      }
+  .start-box {
+    display:none !important;
+  }
+  .reset-box {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #e0e0e0;
+  color: #333;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  display: none;
+  z-index: 9999;
+  user-select: none;
+}
+
+.reset-box:hover {
+  background-color: #d0d0d0;
+} 
     }
   </style>
 </head>
+<div id="resetBox" class="reset-box" onclick="resetAll()">
+  Zurücksetzen
+</div>  
+
+  
 <body>
   <h1 id="pageTitle" tabindex="0">Übersicht über die Notenkonferenzen</h1>
   <div class="logo-status-wrapper">
@@ -295,6 +319,7 @@
     const startBoxEl = document.getElementById('startBox');
     const titleEl = document.getElementById('pageTitle');
     const lockIcon = document.getElementById('lockIcon');
+    const resetBox = document.getElementById('resetBox');
 
     let timerInterval;
     let unlocked = false;
@@ -385,14 +410,31 @@
       });
     }
 
-    function toggleLock(force = null) {
-      if (force !== null) {
-        unlocked = force;
-      } else {
-        unlocked = !unlocked;
-      }
-      lockIcon.classList.toggle('unlocked', unlocked);
-    }
+   function toggleLock() {
+  unlocked = !unlocked;
+  lockIcon.classList.toggle('unlocked', unlocked);
+
+  // Reset-Box ein-/ausblenden
+  resetBox.style.display = unlocked ? 'block' : 'none';
+}
+    function resetAll() {
+  if (!unlocked) return;
+
+  db.ref().set({
+    konferenz: null,
+    bereitsGeklickt: []
+  });
+
+  // UI sofort zurücksetzen
+  startBoxEl.style.display = 'none';
+  statusTextEl.textContent = 'Die Konferenzen haben noch nicht begonnen.';
+  currentClass = null;
+
+  clearInterval(timerInterval);
+
+  resetBox.style.display = 'none';
+  toggleLock(false);
+}
 
     titleEl.ondblclick = () => {
       if (!unlocked) return;
