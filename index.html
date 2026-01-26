@@ -466,12 +466,27 @@ function resetAll() {
 function pauseKonferenz() {
   if (!unlocked || !currentClass) return;
 
-  db.ref("konferenz").update({
-    paused: true
-  });
+  db.ref("konferenz").once("value").then(snap => {
+    const konf = snap.val();
+    if (!konf?.startzeit) return;
 
-  clearInterval(timerInterval);
-  statusTextEl.textContent = "Es hat noch keine neue Konferenz begonnen.";
+    const start = new Date(konf.startzeit).getTime();
+    const dauer = Math.floor((Date.now() - start) / 1000);
+
+    // Dauer für Highscore speichern
+    db.ref("historie/" + currentClass).set({
+      dauer: dauer
+    });
+
+    // Konferenz pausieren
+    db.ref("konferenz").update({
+      paused: true
+    });
+
+    clearInterval(timerInterval);
+    statusTextEl.textContent = "⏸ Konferenz pausiert";
+    currentClass = null;
+  });
 }
 /* =========================
    Highscore
