@@ -303,25 +303,37 @@ body {
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
+/* =========================
+   Firebase Initialisierung
+========================= */
 firebase.initializeApp({
   databaseURL: "https://notenkonferenzen-default-rtdb.europe-west1.firebasedatabase.app/"
 });
 
 const db = firebase.database();
 
+/* =========================
+   DOM Elemente
+========================= */
 const statusTextEl = document.getElementById("statusText");
-const startBoxEl = document.getElementById("startBox");
-const lockIcon = document.getElementById("lockIcon");
-const resetBox = document.getElementById("resetBox");
-const pauseBox = document.getElementById("pauseBox");
+const startBoxEl   = document.getElementById("startBox");
+const lockIcon     = document.getElementById("lockIcon");
+const resetBox     = document.getElementById("resetBox");
+const pauseBox     = document.getElementById("pauseBox");
 
-let timerInterval;
+/* =========================
+   Status Variablen
+========================= */
+let timerInterval = null;
 let unlocked = false;
 let currentClass = null;
 
-db.ref().on("value", snap => {
-  const data = snap.val() || {};
-  const konf = data.konferenz || {};
+/* =========================
+   Haupt Listener (Konferenz)
+========================= */
+db.ref("konferenz").on("value", snap => {
+  const konf = snap.val() || {};
+
   clearInterval(timerInterval);
 
   if (konf.paused) {
@@ -339,17 +351,26 @@ db.ref().on("value", snap => {
   }
 });
 
+/* =========================
+   Timer Funktion
+========================= */
 function startTimer(start) {
   timerInterval = setInterval(() => {
-    const diff = Math.floor((Date.now() - start) / 1000);
-    const min = Math.floor(diff / 60);
-    const sec = diff % 60;
-    statusTextEl.textContent = `Aktuell in der Konferenz: ${currentClass} (${min} Min ${sec} Sek)`;
+    const diff = Math.floor((Date.now() - start.getTime()) / 1000);
+    const min  = Math.floor(diff / 60);
+    const sec  = diff % 60;
+
+    statusTextEl.textContent =
+      `Aktuell in der Konferenz: ${currentClass} (${min} Min ${sec} Sek)`;
   }, 1000);
 }
 
+/* =========================
+   Klasse auswählen
+========================= */
 function selectClass(cls) {
   if (!unlocked) return;
+
   db.ref().update({
     konferenz: {
       klasse: cls,
@@ -357,27 +378,65 @@ function selectClass(cls) {
       paused: false
     }
   });
+
+  // Klasse als benutzt markieren
+  db.ref("bereitsGeklickt/" + cls).set(true);
+
   toggleLock(false);
 }
 
+/* =========================
+   Bereits geklickte Klassen
+========================= */
+db.ref("bereitsGeklickt").on("value", snap => {
+  const used = snap.val() || {};
+
+  document.querySelectorAll("button").forEach(btn => {
+    const cls = btn.textContent.trim();
+
+    if (used[cls]) {
+      btn.classList.add("used");
+      btn.disabled = true;
+    }
+  });
+});
+
+/* =========================
+   Lock / Unlock
+========================= */
 function toggleLock(force = null) {
   unlocked = force !== null ? force : !unlocked;
+
   lockIcon.classList.toggle("unlocked", unlocked);
   resetBox.style.display = unlocked ? "block" : "none";
   pauseBox.style.display = unlocked ? "block" : "none";
 }
 
+/* =========================
+   Reset
+========================= */
 function resetAll() {
   if (!unlocked) return;
+
   db.ref().set({});
   clearInterval(timerInterval);
-  statusTextEl.textContent = "Die Konferenzen haben noch nicht begonnen.";
+
+  statusTextEl.textContent =
+    "Die Konferenzen haben noch nicht begonnen.";
+
   toggleLock(false);
 }
 
+/* =========================
+   Pause
+========================= */
 function pauseKonferenz() {
   if (!unlocked || !currentClass) return;
-  db.ref("konferenz").update({ paused: true });
+
+  db.ref("konferenz").update({
+    paused: true
+  });
+
   clearInterval(timerInterval);
   statusTextEl.textContent = "⏸ Konferenz pausiert";
 }
