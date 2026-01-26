@@ -160,6 +160,21 @@ body {
 .reset-box:hover {
   background-color: #d0d0d0;
 } 
+.highscore-box {
+  margin: 40px auto 10px;
+  max-width: 600px;
+  padding: 12px 16px;
+  border-top: 2px solid #ddd;
+  font-size: 15px;
+  color: #333;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+
+
+
  
     @media (max-width: 625px) {
       .class-label {
@@ -196,6 +211,10 @@ body {
   .start-box {
     display:none !important;
   }
+  .highscore-box {
+    flex-direction: column;
+    font-size: 14px;
+  }
     }
 
 #pauseBox {
@@ -207,7 +226,10 @@ body {
 </head>
 
 <body>
-
+<div id="highscoreBox" class="highscore-box">
+  <div><strong>🏆 Kürzeste Konferenz:</strong> <span id="shortestScore">–</span></div>
+  <div><strong>🐢 Längste Konferenz:</strong> <span id="longestScore">–</span></div>
+</div>
 <div id="resetBox" class="reset-box" onclick="resetAll()">Zurücksetzen</div>
 <div id="pauseBox" class="reset-box" onclick="pauseKonferenz()">⏸ Pause</div>
 
@@ -317,6 +339,8 @@ const startBoxEl   = document.getElementById("startBox");
 const lockIcon     = document.getElementById("lockIcon");
 const resetBox     = document.getElementById("resetBox");
 const pauseBox     = document.getElementById("pauseBox");
+const shortestEl = document.getElementById("shortestScore");
+const longestEl  = document.getElementById("longestScore");
 
 /* =========================
    Status Variablen
@@ -368,10 +392,19 @@ function startTimer(start) {
 function selectClass(cls) {
   if (!unlocked) return;
 
-  const btn = [...document.querySelectorAll("button")]
-    .find(b => b.textContent.trim() === cls);
+  if (currentClass) {
+    db.ref("konferenz").once("value").then(snap => {
+      const konf = snap.val();
+      if (konf?.startzeit) {
+        const start = new Date(konf.startzeit).getTime();
+        const dauer = Math.floor((Date.now() - start) / 1000);
 
-  if (btn && btn.dataset.used === "true") return;
+        db.ref("historie/" + currentClass).set({
+          dauer: dauer
+        });
+      }
+    });
+  }
 
   db.ref().update({
     konferenz: {
@@ -383,6 +416,7 @@ function selectClass(cls) {
 
   db.ref("bereitsGeklickt/" + cls).set(true);
   toggleLock(false);
+}
 }
 
 /* =========================
@@ -440,6 +474,41 @@ function pauseKonferenz() {
   clearInterval(timerInterval);
   statusTextEl.textContent = "Es hat noch keine neue Konferenz begonnen.";
 }
+/* =========================
+   Highscore
+========================= */
+function formatTime(seconds) {
+  const min = Math.floor(seconds / 60);
+  const sec = seconds % 60;
+  return `${min} Min ${sec} Sek`;
+}
+db.ref("historie").on("value", snap => {
+  const data = snap.val();
+  if (!data) return;
+
+  let shortest = null;
+  let longest  = null;
+
+  for (const cls in data) {
+    const d = data[cls].dauer;
+    if (shortest === null || d < shortest.dauer) {
+      shortest = { klasse: cls, dauer: d };
+    }
+    if (longest === null || d > longest.dauer) {
+      longest = { klasse: cls, dauer: d };
+    }
+  }
+
+  if (shortest) {
+    shortestEl.textContent =
+      `${shortest.klasse} (${formatTime(shortest.dauer)})`;
+  }
+
+  if (longest) {
+    longestEl.textContent =
+      `${longest.klasse} (${formatTime(longest.dauer)})`;
+  }
+});
 </script>
 
 </body>
