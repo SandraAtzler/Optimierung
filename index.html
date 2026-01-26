@@ -371,6 +371,11 @@ function startTimer(start) {
 function selectClass(cls) {
   if (!unlocked) return;
 
+  const btn = [...document.querySelectorAll("button")]
+    .find(b => b.textContent.trim() === cls);
+
+  if (btn && btn.dataset.used === "true") return;
+
   db.ref().update({
     konferenz: {
       klasse: cls,
@@ -379,9 +384,7 @@ function selectClass(cls) {
     }
   });
 
-  // Klasse als benutzt markieren
   db.ref("bereitsGeklickt/" + cls).set(true);
-
   toggleLock(false);
 }
 
@@ -394,10 +397,10 @@ db.ref("bereitsGeklickt").on("value", snap => {
   document.querySelectorAll("button").forEach(btn => {
     const cls = btn.textContent.trim();
 
-    if (used[cls]) {
-      btn.classList.add("used");
-      btn.disabled = true;
-    }
+   if (used[cls]) {
+        btn.classList.add("used");
+        btn.dataset.used = "true";
+   }
   });
 });
 
