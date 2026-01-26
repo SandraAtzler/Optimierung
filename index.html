@@ -1,482 +1,263 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Notenkonferenzen Übersicht</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #fefefe;
-      margin: 20px;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-      user-select: none;
-      cursor: default;
-    }
-    .logo-status-wrapper {
-      position: relative;
-      margin-bottom: 20px;
-      height: 70px;
-    }
-    .logo {
-      position: absolute;
-      left: calc(50% - 260px);
-      top: 50%;
-      transform: translateY(-50%);
-      height: 60px;
-      user-select: none;
-    }
-    .status-text,
-    .start-box {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      user-select: none;
-      left: calc(50% - 160px);
-    }
-    .start-box {
-      background-color: #8b0000;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 5px;
-      font-weight: bold;
-      font-size: 1.2em;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-      height: auto;
-      display: none;
-      white-space: nowrap;
-    }
-    .status-text {
-      font-size: 18px;
-      font-weight: bold;
-      white-space: normal;
-    }
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 0 10px;
-    }
-    .group-box {
-      border: 2px solid #eee;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      overflow: hidden;
-    }
-    .group-header {
-      background-color: #eee;
-      padding: 12px 25px;
-      font-weight: bold;
-      font-size: 16px;
-      color: #333;
-      text-align: center;
-      border-bottom: 2px solid #eee;
-    }
-    .group-content {
-      padding: 10px 30px 0 30px;
-    }
-    .class-row {
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .class-label {
-      font-weight: bold;
-      font-size: 16px;
-      color: #330000;
-      min-width: 100px;
-    }
-    button {
-      background-color: darkred;
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 5px;
-      cursor: pointer;
-      min-width: 70px;
-      font-size: 16px;
-      transition: background-color 0.3s;
-      user-select: none;
-    }
-    button:focus {
-      outline: 2px solid #8b0000;
-      outline-offset: 2px;
-    }
-    button.active {
-      background-color: #e07b7b;
-    }
-    button.used {
-      background-color: #e3e3e3;
-      position: relative;
-      overflow: hidden;
-    }
-    button.used::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: -25%;
-      width: 150%;
-      height: 2px;
-      background-color: #cecece;
-      transform: rotate(-30deg);
-      pointer-events: none;
-    }
-    button:disabled {
-      background-color: #440000;
-      cursor: not-allowed;
-    }
-    .lock {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 40px;
-      height: 40px;
-      cursor: pointer;
-      opacity: 0;
-      transition: filter 0.3s;
-    }
-    .lock.unlocked {
-      opacity: 0.6;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notenkonferenzen Übersicht</title>
 
-    .reset-box {
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background-color: #fefefe;
+  margin: 20px;
+}
+
+h1 {
+  text-align: center;
+  user-select: none;
+}
+
+.logo-status-wrapper {
+  position: relative;
+  height: 70px;
+  margin-bottom: 20px;
+}
+
+.logo {
+  position: absolute;
+  left: calc(50% - 260px);
+  top: 50%;
+  transform: translateY(-50%);
+  height: 60px;
+}
+
+.start-box {
+  position: absolute;
+  top: 50%;
+  left: calc(50% - 160px);
+  transform: translateY(-50%);
+  background: #8b0000;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  display: none;
+}
+
+.status-text {
+  position: absolute;
+  top: 50%;
+  left: calc(50% - 160px);
+  transform: translateY(-50%);
+  font-weight: bold;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+}
+
+.group-box {
+  border: 2px solid #eee;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.group-header {
+  background: #eee;
+  padding: 12px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.group-content {
+  padding: 10px 30px;
+}
+
+.class-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.class-label {
+  min-width: 100px;
+  font-weight: bold;
+}
+
+button {
+  background: darkred;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button.active {
+  background: #e07b7b;
+}
+
+button.used {
+  background: #ddd;
+}
+
+.lock {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.lock.unlocked {
+  opacity: 0.6;
+}
+
+.reset-box {
   position: fixed;
   top: 20px;
   right: 20px;
-  background-color: #e0e0e0;
-  color: #333;
+  background: #e0e0e0;
   padding: 10px 18px;
   border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
   display: none;
   z-index: 9999;
-  user-select: none;
 }
-
-.reset-box:hover {
-  background-color: #d0d0d0;
-} 
 
 #pauseBox {
-  display: none;
-}    
-    @media (max-width: 625px) {
-      .class-label {
-        display: none;
-      }
-      button {
-        padding: 6px 10px;
-        font-size: 14px;
-        min-width: 45px;
-      }
-      .logo-status-wrapper {
-      display: flex;
-      align-items: left;
-      justify-content: left;
-      margin-bottom: 20px;
-      gap: 20px;
-    }
+  top: 70px;
+}
 
-      .logo {
-        margin-left: 20px;
-        height: 60px;
-        position: static;
-        transform: none;
-      }
-  
-  .status-text {
-    margin-left: 80px;
-    margin-top: 5px;
-    max-width: 70%;
-    white-space: normal;
-    word-break: break-word;
-  }
+@media (max-width: 600px) {
+  .start-box { display: none !important; }
+  .status-text { max-width: 70%; }
+}
+</style>
+</head>
 
-  .start-box {
-    display:none !important;
-  }
-    }
-  </style>
-</head>  
 <body>
-  <div id="resetBox" class="reset-box" onclick="resetAll()">
-  Zurücksetzen
-</div>  
-<div id="pauseBox" class="reset-box" onclick="pauseKonferenz()">
-  ⏸ Pause
+
+<div id="resetBox" class="reset-box" onclick="resetAll()">Zurücksetzen</div>
+<div id="pauseBox" class="reset-box" onclick="pauseKonferenz()">⏸ Pause</div>
+
+<h1>Übersicht über die Notenkonferenzen</h1>
+
+<div class="logo-status-wrapper">
+  <img src="https://info.marianumlan.de/nachmittagsanmeldung/assets/img/logo2.png" class="logo">
+  <div id="startBox" class="start-box"></div>
+  <div id="statusText" class="status-text">Die Konferenzen haben noch nicht begonnen.</div>
 </div>
-  <h1 id="pageTitle" tabindex="0">Übersicht über die Notenkonferenzen</h1>
-  <div class="logo-status-wrapper">
-    <img src="https://info.marianumlan.de/nachmittagsanmeldung/assets/img/logo2.png" alt="Schullogo" class="logo" />
-    <div class="start-box" id="startBox">Die Konferenz startet jetzt!</div>
-    <div class="status-text" id="statusText">Die Konferenzen haben noch nicht begonnen.</div>
-  </div>
 
 <div class="container">
-  
-  <!-- Klasse 5-7 -->
   <div class="group-box">
-      <div class="group-header">Konferenzen am Mittwoch (21.01.)</div>
-      <div class="group-content">
-        <div class="class-row">
-          <div class="class-label">5. Klassen</div>
-          <button ondblclick="selectClass('5a')">5a</button>
-          <button ondblclick="selectClass('5b')">5b</button>
-          <button ondblclick="selectClass('5c')">5c</button>
-          <button ondblclick="selectClass('5d')">5d</button>
-          <button ondblclick="selectClass('5e')">5e</button>
-        </div>
-        <div class="class-row">
-          <div class="class-label">6. Klassen</div>
-          <button ondblclick="selectClass('6a')">6a</button>
-          <button ondblclick="selectClass('6b')">6b</button>
-          <button ondblclick="selectClass('6c')">6c</button>
-          <button ondblclick="selectClass('6d')">6d</button>
-          <button ondblclick="selectClass('6e')">6e</button>
-        </div>
-        <div class="class-row">
-          <div class="class-label">7. Klassen</div>
-          <button ondblclick="selectClass('7a')">7a</button>
-          <button ondblclick="selectClass('7b')">7b</button>
-          <button ondblclick="selectClass('7c')">7c</button>
-          <button ondblclick="selectClass('7d')">7d</button>
-          <button ondblclick="selectClass('7e')">7e</button>
-        </div>
+    <div class="group-header">Konferenzen</div>
+    <div class="group-content">
+      <div class="class-row">
+        <div class="class-label">Klassen</div>
+        <button ondblclick="selectClass('5a')">5a</button>
+        <button ondblclick="selectClass('5b')">5b</button>
+        <button ondblclick="selectClass('6a')">6a</button>
+        <button ondblclick="selectClass('6b')">6b</button>
       </div>
     </div>
-  
-  
-
-    <!-- Klasse 8-9 -->
-    <div class="group-box">
-      <div class="group-header">Konferenzen am Donnerstag (22.01.)</div>
-      <div class="group-content">
-        <div class="class-row">
-          <div class="class-label">8. Klassen</div>
-          <button ondblclick="selectClass('8a')">8a</button>
-          <button ondblclick="selectClass('8b')">8b</button>
-          <button ondblclick="selectClass('8c')">8c</button>
-          <button ondblclick="selectClass('8d')">8d</button>
-          <button ondblclick="selectClass('8e')">8e</button>
-        </div>
-        <div class="class-row">
-          <div class="class-label">9. Klassen</div>
-          <button ondblclick="selectClass('9a')">9a</button>
-          <button ondblclick="selectClass('9b')">9b</button>
-          <button ondblclick="selectClass('9c')">9c</button>
-          <button ondblclick="selectClass('9d')">9d</button>
-          <button ondblclick="selectClass('9e')">9e</button>
-        </div>
-      </div>
-    </div>
-
-  <!-- Klasse 10 -->
-   <div class="group-box">
-      <div class="group-header">Konferenzen am Freitag (23.01.)</div>
-      <div class="group-content">
-        <div class="class-row">
-          <div class="class-label">10. Klassen</div>
-          <button ondblclick="selectClass('10a')">10a</button>
-          <button ondblclick="selectClass('10b')">10b</button>
-          <button ondblclick="selectClass('10c')">10c</button>
-          <button ondblclick="selectClass('10d')">10d</button>
-          <button ondblclick="selectClass('10e')">10e</button>
-        </div>
-      </div>
-    </div> 
-
   </div>
-    
-    
+</div>
 
+<img
+  src="https://cdn-icons-png.flaticon.com/512/61/61457.png"
+  id="lockIcon"
+  class="lock"
+  ondblclick="toggleLock()"
+/>
 
-  <img
-    src="https://cdn-icons-png.flaticon.com/512/61/61457.png"
-    alt="Schloss"
-    id="lockIcon"
-    class="lock"
-    ondblclick="toggleLock()"
-  />
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyCIOeOJnqY3yHjbl6Ho14PYO6lpcOZtjfA",
-      authDomain: "notenkonferenzen.firebaseapp.com",
-      projectId: "notenkonferenzen",
-      storageBucket: "notenkonferenzen.appspot.com",
-      messagingSenderId: "471386308742",
-      appId: "1:471386308742:web:73c3409b42e1db2d599107",
-      databaseURL: "https://notenkonferenzen-default-rtdb.europe-west1.firebasedatabase.app/"
-    };
+<script>
+firebase.initializeApp({
+  databaseURL: "https://notenkonferenzen-default-rtdb.europe-west1.firebasedatabase.app/"
+});
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+const db = firebase.database();
 
-    const statusTextEl = document.getElementById('statusText');
-    const startBoxEl = document.getElementById('startBox');
-    const titleEl = document.getElementById('pageTitle');
-    const lockIcon = document.getElementById('lockIcon');
-    const resetBox = document.getElementById('resetBox');
+const statusTextEl = document.getElementById("statusText");
+const startBoxEl = document.getElementById("startBox");
+const lockIcon = document.getElementById("lockIcon");
+const resetBox = document.getElementById("resetBox");
+const pauseBox = document.getElementById("pauseBox");
 
-    let timerInterval;
-    let unlocked = false;
-    let currentClass = null;
+let timerInterval;
+let unlocked = false;
+let currentClass = null;
 
-    db.ref().on('value', snap => {
-      const data = snap.val() || {};
-      const konferenz = data.konferenz || {};
-      const clicked = data.bereitsGeklickt || [];
+db.ref().on("value", snap => {
+  const data = snap.val() || {};
+  const konf = data.konferenz || {};
+  clearInterval(timerInterval);
 
-      clearInterval(timerInterval);
-      document.querySelectorAll('button').forEach(btn => {
-        const name = btn.textContent;
-        btn.classList.remove('active', 'used');
-        if (clicked.includes(name)) {
-          btn.classList.add('used');
-        }
-      });
-
-      if (konferenz.klasse && konferenz.startzeit) {
-        currentClass = konferenz.klasse;
-        const start = new Date(konferenz.startzeit);
-        const now = Date.now();
-        const startTime = start.getTime();
-        const diffSeconds = Math.floor((now - startTime) / 1000);
-
-        const activeBtn = [...document.querySelectorAll('button')].find(
-          b => b.textContent === currentClass
-        );
-        if (activeBtn) {
-          activeBtn.classList.add('active');
-          activeBtn.classList.remove('used');
-        }
-
-       if (diffSeconds < 10.9) {
-  if (window.innerWidth <= 600) {
-    // Kleine Bildschirme: Text normal anzeigen
-    startBoxEl.style.display = 'none';
-    statusTextEl.textContent = `Die Konferenz der ${currentClass} startet jetzt!`;
-  } else {
-    // Große Bildschirme: roten Kasten anzeigen
-    startBoxEl.style.display = 'inline-block';
-    startBoxEl.textContent = `Die Konferenz der ${currentClass} startet jetzt!`;
-    statusTextEl.textContent = '';
+  if (konf.paused) {
+    statusTextEl.textContent = "⏸ Konferenz pausiert";
+    currentClass = null;
+    return;
   }
 
-  setTimeout(() => {
-    startTimer(start);
-  }, (10 - diffSeconds) * 1000);
-} else {
-          startTimer(start);
-        }
-      } else {
-        startBoxEl.style.display = 'none';
-        statusTextEl.textContent = "Die Konferenzen haben noch nicht begonnen.";
-        currentClass = null;
-      }
-      
-  const konferenz = data.konferenz || {};
-  
-      if (konferenz.paused) {
-  clearInterval(timerInterval);
-  startBoxEl.style.display = 'none';
-  statusTextEl.textContent = "⏸ Konferenz pausiert";
-  currentClass = null;
-  return;
+  if (konf.klasse && konf.startzeit) {
+    currentClass = konf.klasse;
+    startTimer(new Date(konf.startzeit));
+  } else {
+    statusTextEl.textContent = "Die Konferenzen haben noch nicht begonnen.";
+    currentClass = null;
+  }
+});
+
+function startTimer(start) {
+  timerInterval = setInterval(() => {
+    const diff = Math.floor((Date.now() - start) / 1000);
+    const min = Math.floor(diff / 60);
+    const sec = diff % 60;
+    statusTextEl.textContent = `Aktuell in der Konferenz: ${currentClass} (${min} Min ${sec} Sek)`;
+  }, 1000);
 }
-    });
 
-    function startTimer(start) {
-      clearInterval(timerInterval);
-      startBoxEl.style.display = 'none';
-      timerInterval = setInterval(() => {
-        const diff = Math.floor((Date.now() - start) / 1000);
-        const min = Math.floor(diff / 60),
-              sec = diff % 60;
-        statusTextEl.textContent =
-          `Aktuell in der Konferenz: ${currentClass} (${min} Min ${sec} Sek)`;
-      }, 1000);
-    }
-
-    function selectClass(className) {
-      if (!unlocked || className === currentClass) return;
-      db.ref().once('value').then(snap => {
-        const data = snap.val() || {};
-        const clicked = data.bereitsGeklickt || [];
-        if (!clicked.includes(className)) {
-          clicked.push(className);
-        }
-        db.ref().update({
-          konferenz: {
-          klasse: className,
-          startzeit: new Date().toISOString(),
-          paused: false
-        },
-      bereitsGeklickt: clicked
-        });
-        toggleLock(false);
-      });
-    }
-
-   function toggleLock() {
-  unlocked = !unlocked;
-  lockIcon.classList.toggle('unlocked', unlocked);
-
-  // Reset-Box ein-/ausblenden
-  resetBox.style.display = unlocked ? 'block' : 'none';
-}
-    function resetAll() {
+function selectClass(cls) {
   if (!unlocked) return;
-
-  db.ref().set({
-    konferenz: null,
-    bereitsGeklickt: []
+  db.ref().update({
+    konferenz: {
+      klasse: cls,
+      startzeit: new Date().toISOString(),
+      paused: false
+    }
   });
-
-  // UI sofort zurücksetzen
-  startBoxEl.style.display = 'none';
-  statusTextEl.textContent = 'Die Konferenzen haben noch nicht begonnen.';
-  currentClass = null;
-
-  clearInterval(timerInterval);
-
-  resetBox.style.display = 'none';
   toggleLock(false);
 }
 
-    konferenz: {
-  klasse: "6c",
-  startzeit: "...",
-  paused: true | false
+function toggleLock(force = null) {
+  unlocked = force !== null ? force : !unlocked;
+  lockIcon.classList.toggle("unlocked", unlocked);
+  resetBox.style.display = unlocked ? "block" : "none";
+  pauseBox.style.display = unlocked ? "block" : "none";
 }
-pauseBox.style.display = unlocked ? 'block' : 'none';
+
+function resetAll() {
+  if (!unlocked) return;
+  db.ref().set({});
+  clearInterval(timerInterval);
+  statusTextEl.textContent = "Die Konferenzen haben noch nicht begonnen.";
+  toggleLock(false);
+}
 
 function pauseKonferenz() {
   if (!unlocked || !currentClass) return;
-
-  db.ref("konferenz").update({
-    paused: true
-  });
-
+  db.ref("konferenz").update({ paused: true });
   clearInterval(timerInterval);
-
   statusTextEl.textContent = "⏸ Konferenz pausiert";
 }
-    
-    
-    titleEl.ondblclick = () => {
-      if (!unlocked) return;
-      db.ref().set({});
-      toggleLock(false);
-    };
-  </script>
+</script>
+
 </body>
 </html>
