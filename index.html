@@ -162,7 +162,10 @@
 .reset-box:hover {
   background-color: #d0d0d0;
 } 
- 
+
+#pauseBox {
+  display: none;
+}    
     @media (max-width: 625px) {
       .class-label {
         display: none;
@@ -205,6 +208,9 @@
   <div id="resetBox" class="reset-box" onclick="resetAll()">
   Zurücksetzen
 </div>  
+<div id="pauseBox" class="reset-box" onclick="pauseKonferenz()">
+  ⏸ Pause
+</div>
   <h1 id="pageTitle" tabindex="0">Übersicht über die Notenkonferenzen</h1>
   <div class="logo-status-wrapper">
     <img src="https://info.marianumlan.de/nachmittagsanmeldung/assets/img/logo2.png" alt="Schullogo" class="logo" />
@@ -376,6 +382,16 @@
         statusTextEl.textContent = "Die Konferenzen haben noch nicht begonnen.";
         currentClass = null;
       }
+      
+  const konferenz = data.konferenz || {};
+  
+      if (konferenz.paused) {
+  clearInterval(timerInterval);
+  startBoxEl.style.display = 'none';
+  statusTextEl.textContent = "⏸ Konferenz pausiert";
+  currentClass = null;
+  return;
+}
     });
 
     function startTimer(start) {
@@ -400,10 +416,11 @@
         }
         db.ref().update({
           konferenz: {
-            klasse: className,
-            startzeit: new Date().toISOString()
-          },
-          bereitsGeklickt: clicked
+          klasse: className,
+          startzeit: new Date().toISOString(),
+          paused: false
+        },
+      bereitsGeklickt: clicked
         });
         toggleLock(false);
       });
@@ -435,6 +452,26 @@
   toggleLock(false);
 }
 
+    konferenz: {
+  klasse: "6c",
+  startzeit: "...",
+  paused: true | false
+}
+pauseBox.style.display = unlocked ? 'block' : 'none';
+
+function pauseKonferenz() {
+  if (!unlocked || !currentClass) return;
+
+  db.ref("konferenz").update({
+    paused: true
+  });
+
+  clearInterval(timerInterval);
+
+  statusTextEl.textContent = "⏸ Konferenz pausiert";
+}
+    
+    
     titleEl.ondblclick = () => {
       if (!unlocked) return;
       db.ref().set({});
