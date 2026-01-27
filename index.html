@@ -173,11 +173,17 @@ body {
   justify-content: space-between;
   gap: 12px;
 }
+.highscore-box > div {
+  text-align: center;
+}
+
+.highscore-box span {
+  display: block;
+  margin-top: 6px;
+  font-weight: bold;
+}
 
 
-
-
- 
     @media (max-width: 625px) {
       .class-label {
         display: none;
@@ -504,10 +510,9 @@ function pauseKonferenz() {
 /* =========================
    Highscore
 ========================= */
-function formatTime(seconds) {
-  const min = Math.floor(seconds / 60);
-  const sec = seconds % 60;
-  return `${min} Min ${sec} Sek`;
+function formatMinutes(seconds) {
+  const minutes = Math.round(seconds / 60);
+  return `${minutes} Min`;
 }
 db.ref("historie").on("value", snap => {
   const data = snap.val();
@@ -527,14 +532,14 @@ db.ref("historie").on("value", snap => {
   }
 
   if (shortest) {
-    shortestEl.textContent =
-      `${shortest.klasse} (${formatTime(shortest.dauer)})`;
-  }
+  shortestEl.textContent =
+    `${shortest.klasse}: ${formatMinutes(shortest.dauer)}`;
+}
 
-  if (longest) {
-    longestEl.textContent =
-      `${longest.klasse} (${formatTime(longest.dauer)})`;
-  }
+if (longest) {
+  longestEl.textContent =
+    `${longest.klasse}: ${formatMinutes(longest.dauer)}`;
+}
 });
 </script>
 
