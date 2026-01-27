@@ -169,7 +169,7 @@ body {
   box-shadow: inset 0 0 0 1px #d0d0d0;
   font-size: 15px;
   color: #333;
-  display: flex;
+  display: none;
   justify-content: space-between;
   gap: 12px;
 }
@@ -240,7 +240,7 @@ body {
 <div id="resetBox" class="reset-box" onclick="resetAll()">Zurücksetzen</div>
 <div id="pauseBox" class="reset-box" onclick="pauseKonferenz()">⏸ Pause</div>
 
-<h1>Übersicht über die Notenkonferenzen</h1>
+<h1 id="toggleHighscore">Übersicht über die Notenkonferenzen</h1>
 
 <div class="logo-status-wrapper">
   <img src="https://info.marianumlan.de/nachmittagsanmeldung/assets/img/logo2.png" class="logo">
@@ -543,6 +543,19 @@ if (longest) {
     `${longest.klasse}: ${formatMinutes(longest.dauer)}`;
 }
 });
+      
+/* =========================
+   Easter Egg: Highscore Toggle
+========================= */
+const headline = document.getElementById("toggleHighscore");
+const highscoreBox = document.getElementById("highscoreBox");
+
+let highscoreVisible = false;
+
+headline.addEventListener("click", () => {
+  highscoreVisible = !highscoreVisible;
+  highscoreBox.style.display = highscoreVisible ? "block" : "none";
+});      
 </script>
 
 </body>
