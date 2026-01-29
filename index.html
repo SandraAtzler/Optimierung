@@ -540,8 +540,10 @@ function pauseKonferenz() {
     const dauer = Math.floor((Date.now() - start) / 1000);
 
     // Dauer für Highscore speichern
-    db.ref("historie/" + currentClass).set({
-      dauer: dauer
+    const finishedClass = currentClass;
+
+    db.ref("historie/" + finishedClass).set({
+       dauer: dauer
     });
 
     // Konferenz pausieren
