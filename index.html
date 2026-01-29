@@ -455,18 +455,20 @@ function selectClass(cls) {
   if (!unlocked) return;
 
   if (currentClass) {
-    db.ref("konferenz").once("value").then(snap => {
-      const konf = snap.val();
-      if (konf?.startzeit) {
-        const start = new Date(konf.startzeit).getTime();
-        const dauer = Math.floor((Date.now() - start) / 1000);
+  const finishedClass = currentClass; // 🔒 FESTE KOPIE
 
-        db.ref("historie/" + currentClass).set({
-          dauer: dauer
-        });
-      }
+  db.ref("konferenz").once("value").then(snap => {
+    const konf = snap.val();
+    if (!konf?.startzeit) return;
+
+    const start = new Date(konf.startzeit).getTime();
+    const dauer = Math.floor((Date.now() - start) / 1000);
+
+    db.ref("historie/" + finishedClass).set({
+      dauer: dauer
     });
-  }
+  });
+}
 
   const neueStartzeit = new Date().toISOString();
 
