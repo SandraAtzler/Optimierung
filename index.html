@@ -192,9 +192,12 @@ body {
 
 .highscore-box.visible {
   display: flex;
+  flex-direction: row;      /* ← DAS ist der entscheidende Fix */
+  justify-content: space-between;
+  align-items: center;
   opacity: 1;
   transform: translateY(0);
-}      
+}
 
 
     @media (max-width: 625px) {
