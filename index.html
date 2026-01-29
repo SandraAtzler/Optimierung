@@ -377,6 +377,19 @@ const pauseBox     = document.getElementById("pauseBox");
 const shortestEl = document.getElementById("shortestScore");
 const longestEl  = document.getElementById("longestScore");
 
+
+/* =========================
+   Setzen der aktiven Klasse
+========================= */      
+function updateActiveButton(cls) {
+  document.querySelectorAll("button").forEach(btn => {
+    btn.classList.toggle(
+      "active",
+      btn.textContent.trim() === cls
+    );
+  });
+}
+      
 /* =========================
    Status Variablen
 ========================= */
@@ -394,15 +407,19 @@ db.ref("konferenz").on("value", snap => {
 
   if (konf.paused) {
     statusTextEl.textContent = "⏸ Konferenz pausiert";
+    updateActiveButton(null);   // ← wichtig
     currentClass = null;
     return;
   }
 
   if (konf.klasse && konf.startzeit) {
     currentClass = konf.klasse;
+    updateActiveButton(currentClass);  // ← HIER
     startTimer(new Date(konf.startzeit));
   } else {
-    statusTextEl.textContent = "Die Konferenzen haben noch nicht begonnen.";
+    statusTextEl.textContent =
+      "Die Konferenzen haben noch nicht begonnen.";
+    updateActiveButton(null);   // ← HIER
     currentClass = null;
   }
 });
@@ -492,6 +509,7 @@ function resetAll() {
 
   statusTextEl.textContent =
     "Die Konferenzen haben noch nicht begonnen.";
+  updateActiveButton(null);
 
   toggleLock(false);
 }
