@@ -419,10 +419,14 @@ db.ref("konferenz").on("value", snap => {
   }
 
   if (konf.klasse && konf.startzeit) {
-    currentClass = konf.klasse;
-    updateActiveButton(currentClass);  // ← HIER
-    startTimer(new Date(konf.startzeit));
-  } else {
+     if (currentClass !== konf.klasse) {
+        clearInterval(timerInterval);
+     }
+
+     currentClass = konf.klasse;
+     updateActiveButton(currentClass);
+     startTimer(new Date(konf.startzeit));
+ } else {
     statusTextEl.textContent =
       "Die Konferenzen haben noch nicht begonnen.";
     updateActiveButton(null);   // ← HIER
@@ -464,13 +468,13 @@ function selectClass(cls) {
     });
   }
 
-  db.ref().update({
-    konferenz: {
-      klasse: cls,
-      startzeit: new Date().toISOString(),
-      paused: false
-    }
-  });
+  const neueStartzeit = new Date().toISOString();
+
+ db.ref("konferenz").set({
+   klasse: cls,
+   startzeit: neueStartzeit,
+   paused: false
+ });
 
   db.ref("bereitsGeklickt/" + cls).set(true);
   toggleLock(false);
