@@ -148,62 +148,68 @@ body {
     }
 
     .reset-box {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background-color: #e0e0e0;
-  color: #333;
-  padding: 10px 18px;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-  display: none;
-  z-index: 9999;
-  user-select: none;
-}
+      position: fixed;
+      right: 20px;
+      background-color: #e0e0e0;
+      color: #333;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+      display: none;
+      z-index: 9999;
+      user-select: none;
+    }
 
-.reset-box:hover {
-  background-color: #d0d0d0;
-} 
+    .reset-box:hover {
+      background-color: #d0d0d0;
+    }
 
+    /* Zurücksetzen oben, Pause darunter mit Abstand */
+    #resetBox {
+      top: 20px;
+    }
 
-      
-.highscore-box {
-  margin: 40px auto 20px;
-  max-width: 600px;
-  padding: 14px 18px;
-  background-color: #f0f0f0;
-  border-radius: 8px;
-  box-shadow: inset 0 0 0 1px #d0d0d0;
-  font-size: 15px;
-  color: #333;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  display: none;
-  justify-content: space-between;
-  gap: 12px;
-}
-.highscore-box > div {
-  text-align: center;
-}
+    #pauseBox {
+      top: 70px;
+    }
 
-.highscore-box span {
-  display: block;
-  margin-top: 6px;
-  font-size: 14px;
-  color: #555;
-}
+    .highscore-box {
+      margin: 40px auto 20px;
+      max-width: 600px;
+      padding: 14px 18px;
+      background-color: #f0f0f0;
+      border-radius: 8px;
+      box-shadow: inset 0 0 0 1px #d0d0d0;
+      font-size: 15px;
+      color: #333;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      display: none;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .highscore-box > div {
+      text-align: center;
+    }
 
-.highscore-box.visible {
-  display: flex;
-  flex-direction: row;      /* ← DAS ist der entscheidende Fix */
-  justify-content: space-between;
-  align-items: center;
-  opacity: 1;
-  transform: translateY(0);
-}
+    .highscore-box span {
+      display: block;
+      margin-top: 6px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .highscore-box.visible {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      opacity: 1;
+      transform: translateY(0);
+    }
 
 
     @media (max-width: 625px) {
@@ -248,13 +254,6 @@ body {
   }
 
   }
-    }
-
-#pauseBox {
-  top: 70px;
-}
-
-
 </style>
 </head>
 <body>
@@ -380,8 +379,8 @@ const startBoxEl   = document.getElementById("startBox");
 const lockIcon     = document.getElementById("lockIcon");
 const resetBox     = document.getElementById("resetBox");
 const pauseBox     = document.getElementById("pauseBox");
-const shortestEl = document.getElementById("shortestScore");
-const longestEl  = document.getElementById("longestScore");
+const shortestEl   = document.getElementById("shortestScore");
+const longestEl    = document.getElementById("longestScore");
 
 
 /* =========================
@@ -413,7 +412,7 @@ db.ref("konferenz").on("value", snap => {
 
   if (konf.paused) {
     statusTextEl.textContent = "⏸ Konferenz pausiert";
-    updateActiveButton(null);   // ← wichtig
+    updateActiveButton(null);
     currentClass = null;
     return;
   }
@@ -429,7 +428,7 @@ db.ref("konferenz").on("value", snap => {
  } else {
     statusTextEl.textContent =
       "Die Konferenzen haben noch nicht begonnen.";
-    updateActiveButton(null);   // ← HIER
+    updateActiveButton(null);
     currentClass = null;
   }
 });
@@ -455,7 +454,7 @@ function selectClass(cls) {
   if (!unlocked) return;
 
   if (currentClass) {
-  const finishedClass = currentClass; // 🔒 FESTE KOPIE
+  const finishedClass = currentClass;
 
   db.ref("konferenz").once("value").then(snap => {
     const konf = snap.val();
@@ -492,10 +491,14 @@ db.ref("bereitsGeklickt").on("value", snap => {
   document.querySelectorAll("button").forEach(btn => {
     const cls = btn.textContent.trim();
 
-   if (used[cls]) {
-        btn.classList.add("used");
-        btn.dataset.used = "true";
-   }
+    if (used[cls]) {
+      btn.classList.add("used");
+      btn.dataset.used = "true";
+    } else {
+      // Wird beim Reset wichtig: used-Klasse entfernen wenn nicht mehr in Firebase
+      btn.classList.remove("used");
+      btn.dataset.used = "false";
+    }
   });
 });
 
@@ -516,12 +519,31 @@ function toggleLock(force = null) {
 function resetAll() {
   if (!unlocked) return;
 
-  db.ref().set({});
-  clearInterval(timerInterval);
+  // Alles in Firebase löschen (konferenz, bereitsGeklickt, historie)
+  db.ref().set(null);
 
-  statusTextEl.textContent =
-    "Die Konferenzen haben noch nicht begonnen.";
+  clearInterval(timerInterval);
+  currentClass = null;
+
+  // UI sofort zurücksetzen
+  statusTextEl.textContent = "Die Konferenzen haben noch nicht begonnen.";
   updateActiveButton(null);
+
+  // Alle used-Markierungen sofort entfernen
+  document.querySelectorAll("button").forEach(btn => {
+    btn.classList.remove("used", "active");
+    btn.dataset.used = "false";
+  });
+
+  // Highscore zurücksetzen
+  shortestEl.textContent = "–";
+  longestEl.textContent  = "–";
+
+  // Highscore-Box ausblenden falls sichtbar
+  const highscoreBox = document.getElementById("highscoreBox");
+  highscoreBox.classList.remove("visible");
+  setTimeout(() => { highscoreBox.style.display = "none"; }, 300);
+  highscoreVisible = false;
 
   toggleLock(false);
 }
@@ -539,14 +561,12 @@ function pauseKonferenz() {
     const start = new Date(konf.startzeit).getTime();
     const dauer = Math.floor((Date.now() - start) / 1000);
 
-    // Dauer für Highscore speichern
     const finishedClass = currentClass;
 
     db.ref("historie/" + finishedClass).set({
        dauer: dauer
     });
 
-    // Konferenz pausieren
     db.ref("konferenz").update({
       paused: true
     });
@@ -565,7 +585,13 @@ function formatMinutes(seconds) {
 }
 db.ref("historie").on("value", snap => {
   const data = snap.val();
-  if (!data) return;
+
+  // Wenn keine Daten (z. B. nach Reset): Anzeige zurücksetzen
+  if (!data) {
+    shortestEl.textContent = "–";
+    longestEl.textContent  = "–";
+    return;
+  }
 
   let shortest = null;
   let longest  = null;
@@ -581,14 +607,12 @@ db.ref("historie").on("value", snap => {
   }
 
   if (shortest) {
-  shortestEl.textContent =
-    `${shortest.klasse}: ${formatMinutes(shortest.dauer)}`;
-}
+    shortestEl.textContent = `${shortest.klasse}: ${formatMinutes(shortest.dauer)}`;
+  }
 
-if (longest) {
-  longestEl.textContent =
-    `${longest.klasse}: ${formatMinutes(longest.dauer)}`;
-}
+  if (longest) {
+    longestEl.textContent = `${longest.klasse}: ${formatMinutes(longest.dauer)}`;
+  }
 });
       
 /* =========================
