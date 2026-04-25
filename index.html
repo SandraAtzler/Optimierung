@@ -207,20 +207,23 @@ body {
     }
     .hs-card {
       flex: 1;
-      background: #f7f7f7;
-      border: 1px solid #e0e0e0;
-      border-radius: 10px;
-      padding: 12px 14px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      background: white;
+      border: 2px solid #eee;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }
     .hs-title {
       font-weight: bold;
       font-size: 14px;
-      color: #8b0000;
+      color: #333;
       text-align: center;
-      margin-bottom: 10px;
-      border-bottom: 1px solid #e0e0e0;
-      padding-bottom: 6px;
+      padding: 10px 14px;
+      background-color: #eee;
+      border-bottom: 2px solid #eee;
+    }
+    .hs-body {
+      padding: 10px 14px;
     }
     .hs-row {
       display: flex;
@@ -230,6 +233,7 @@ body {
       font-size: 13px;
       color: #333;
     }
+    .hs-row:last-child { margin-bottom: 0; }
     .hs-icon { font-size: 14px; }
     .hs-label { color: #777; flex: 1; }
     .hs-value { font-weight: bold; color: #222; white-space: nowrap; }
@@ -397,18 +401,25 @@ body {
       <div id="highscoreBox" class="highscore-wrapper">
         <div class="hs-card">
           <div class="hs-title">Klassen 10</div>
-          <div class="hs-row"><span class="hs-icon">🏆</span><span class="hs-label">Kürzeste</span><span class="hs-value" id="hs-10-short">–</span></div>
-          <div class="hs-row"><span class="hs-icon">🐢</span><span class="hs-label">Längste</span><span class="hs-value" id="hs-10-long">–</span></div>
+          <div class="hs-body">
+            <div class="hs-row"><span class="hs-icon">🏆</span><span class="hs-label">Schnellste</span><span class="hs-value" id="hs-10-short">–</span></div>
+            <div class="hs-row"><span class="hs-icon">🐢</span><span class="hs-label">Ausführlichste</span><span class="hs-value" id="hs-10-long">–</span></div>
+          </div>
         </div>
         <div class="hs-card">
           <div class="hs-title">Klassen 8 &amp; 9</div>
-          <div class="hs-row"><span class="hs-icon">🏆</span><span class="hs-label">Kürzeste</span><span class="hs-value" id="hs-89-short">–</span></div>
-          <div class="hs-row"><span class="hs-icon">🐢</span><span class="hs-label">Längste</span><span class="hs-value" id="hs-89-long">–</span></div>
+          <div class="hs-body">
+            <div class="hs-row"><span class="hs-icon">🏆</span><span class="hs-label">Schnellste</span><span class="hs-value" id="hs-89-short">–</span></div>
+            <div class="hs-row"><span class="hs-icon">🐢</span><span class="hs-label">Ausführlichste</span><span class="hs-value" id="hs-89-long">–</span></div>
+          </div>
         </div>
         <div class="hs-card">
           <div class="hs-title">Klassen 5–7</div>
-          <div class="hs-row"><span class="hs-icon">🏆</span><span class="hs-label">Kürzeste</span><span class="hs-value" id="hs-57-short">–</span></div>
-          <div class="hs-row"><span class="hs-icon">🐢</span><span class="hs-label">Längste</span><span class="hs-value" id="hs-57-long">–</span></div>
+          <div class="hs-body">
+            <div class="hs-row"><span class="hs-icon">🏆</span><span class="hs-label">Schnellste</span><span class="hs-value" id="hs-57-short">–</span></div>
+            <div class="hs-row"><span class="hs-icon">🐢</span><span class="hs-label">Ausführlichste</span><span class="hs-value" id="hs-57-long">–</span></div>
+          </div>
+        </div>
         </div>
       </div>
 </div>
