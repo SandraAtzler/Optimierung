@@ -190,41 +190,49 @@ body {
       top: 70px;
     }
 
-    .highscore-box {
-      margin: 40px auto 20px;
+    .highscore-wrapper {
+      margin: 30px auto 20px;
       max-width: 600px;
-      padding: 14px 18px;
-      background-color: #f0f0f0;
-      border-radius: 8px;
-      box-shadow: inset 0 0 0 1px #d0d0d0;
-      font-size: 15px;
-      color: #333;
+      display: none;
+      gap: 12px;
       opacity: 0;
       transform: translateY(10px);
       transition: opacity 0.3s ease, transform 0.3s ease;
-      display: none;
-      justify-content: space-between;
-      gap: 12px;
     }
-    .highscore-box > div {
-      text-align: center;
-    }
-
-    .highscore-box span {
-      display: block;
-      margin-top: 6px;
-      font-size: 14px;
-      color: #555;
-    }
-
-    .highscore-box.visible {
+    .highscore-wrapper.visible {
       display: flex;
       flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
       opacity: 1;
       transform: translateY(0);
     }
+    .hs-card {
+      flex: 1;
+      background: #f7f7f7;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 12px 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+    .hs-title {
+      font-weight: bold;
+      font-size: 14px;
+      color: #8b0000;
+      text-align: center;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 6px;
+    }
+    .hs-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+      font-size: 13px;
+      color: #333;
+    }
+    .hs-icon { font-size: 14px; }
+    .hs-label { color: #777; flex: 1; }
+    .hs-value { font-weight: bold; color: #222; white-space: nowrap; }
 
 
     @media (max-width: 625px) {
@@ -290,9 +298,8 @@ body {
     display:none !important;
   }
   
-  .highscore-box.visible {
+  .highscore-wrapper.visible {
     flex-direction: column;
-    font-size: 14px;
   }
 
   }
@@ -387,16 +394,23 @@ body {
         </div>
       </div>
     </div> 
-      <div id="highscoreBox" class="highscore-box">
-  <div>
-    <strong>🏆 Kürzeste Konferenz:</strong><br>
-    <span id="shortestScore">–</span>
-  </div>
-  <div>
-    <strong>🐢 Längste Konferenz:</strong><br>
-    <span id="longestScore">–</span>
-  </div>
-</div>
+      <div id="highscoreBox" class="highscore-wrapper">
+        <div class="hs-card">
+          <div class="hs-title">Klassen 10</div>
+          <div class="hs-row"><span class="hs-icon">🏆</span><span class="hs-label">Kürzeste</span><span class="hs-value" id="hs-10-short">–</span></div>
+          <div class="hs-row"><span class="hs-icon">🐢</span><span class="hs-label">Längste</span><span class="hs-value" id="hs-10-long">–</span></div>
+        </div>
+        <div class="hs-card">
+          <div class="hs-title">Klassen 8 &amp; 9</div>
+          <div class="hs-row"><span class="hs-icon">🏆</span><span class="hs-label">Kürzeste</span><span class="hs-value" id="hs-89-short">–</span></div>
+          <div class="hs-row"><span class="hs-icon">🐢</span><span class="hs-label">Längste</span><span class="hs-value" id="hs-89-long">–</span></div>
+        </div>
+        <div class="hs-card">
+          <div class="hs-title">Klassen 5–7</div>
+          <div class="hs-row"><span class="hs-icon">🏆</span><span class="hs-label">Kürzeste</span><span class="hs-value" id="hs-57-short">–</span></div>
+          <div class="hs-row"><span class="hs-icon">🐢</span><span class="hs-label">Längste</span><span class="hs-value" id="hs-57-long">–</span></div>
+        </div>
+      </div>
 </div>
 
       
@@ -430,8 +444,6 @@ const startBoxEl   = document.getElementById("startBox");
 const lockIcon     = document.getElementById("lockIcon");
 const resetBox     = document.getElementById("resetBox");
 const pauseBox     = document.getElementById("pauseBox");
-const shortestEl   = document.getElementById("shortestScore");
-const longestEl    = document.getElementById("longestScore");
 const ampelEl      = document.getElementById("ampel");
 const ampelRot     = document.getElementById("ampelRot");
 const ampelGelb    = document.getElementById("ampelGelb");
@@ -627,8 +639,10 @@ function resetAll() {
   });
 
   // Highscore zurücksetzen
-  shortestEl.textContent = "–";
-  longestEl.textContent  = "–";
+  ["10","89","57"].forEach(g => {
+    document.getElementById(`hs-${g}-short`).textContent = "–";
+    document.getElementById(`hs-${g}-long`).textContent  = "–";
+  });
 
   // Highscore-Box ausblenden falls sichtbar
   const highscoreBox = document.getElementById("highscoreBox");
@@ -675,35 +689,32 @@ function formatMinutes(seconds) {
   const minutes = Math.round(seconds / 60);
   return `${minutes} Min`;
 }
+
+const groups = {
+  "10": ["10a","10b","10c","10d","10e"],
+  "89": ["8a","8b","8c","8d","8e","9a","9b","9c","9d","9e"],
+  "57": ["5a","5b","5c","5d","5e","6a","6b","6c","6d","6e","7a","7b","7c","7d","7e"]
+};
+
 db.ref("historie").on("value", snap => {
-  const data = snap.val();
+  const data = snap.val() || {};
 
-  // Wenn keine Daten (z. B. nach Reset): Anzeige zurücksetzen
-  if (!data) {
-    shortestEl.textContent = "–";
-    longestEl.textContent  = "–";
-    return;
-  }
+  for (const groupKey in groups) {
+    const classes = groups[groupKey];
+    let shortest = null;
+    let longest  = null;
 
-  let shortest = null;
-  let longest  = null;
-
-  for (const cls in data) {
-    const d = data[cls].dauer;
-    if (shortest === null || d < shortest.dauer) {
-      shortest = { klasse: cls, dauer: d };
+    for (const cls of classes) {
+      if (!data[cls]) continue;
+      const d = data[cls].dauer;
+      if (shortest === null || d < shortest.dauer) shortest = { klasse: cls, dauer: d };
+      if (longest  === null || d > longest.dauer)  longest  = { klasse: cls, dauer: d };
     }
-    if (longest === null || d > longest.dauer) {
-      longest = { klasse: cls, dauer: d };
-    }
-  }
 
-  if (shortest) {
-    shortestEl.textContent = `${shortest.klasse}: ${formatMinutes(shortest.dauer)}`;
-  }
-
-  if (longest) {
-    longestEl.textContent = `${longest.klasse}: ${formatMinutes(longest.dauer)}`;
+    document.getElementById(`hs-${groupKey}-short`).textContent =
+      shortest ? `${shortest.klasse}: ${formatMinutes(shortest.dauer)}` : "–";
+    document.getElementById(`hs-${groupKey}-long`).textContent =
+      longest  ? `${longest.klasse}: ${formatMinutes(longest.dauer)}`   : "–";
   }
 });
       
@@ -719,7 +730,7 @@ headline.addEventListener("click", () => {
   highscoreVisible = !highscoreVisible;
 
   if (highscoreVisible) {
-    highscoreBox.style.display = "block";
+    highscoreBox.style.display = "flex";
     requestAnimationFrame(() => {
       highscoreBox.classList.add("visible");
     });
