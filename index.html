@@ -244,6 +244,19 @@ body {
     word-break: break-word;
   }
 
+  .status-text span {
+    display: inline;
+  }
+
+  .zeit {
+    white-space: nowrap;
+  }
+
+  #ampel {
+    margin-top: 6px;
+    align-self: flex-start;
+  }
+
   .start-box {
     display:none !important;
   }
@@ -482,8 +495,8 @@ function startTimer(start) {
     const min  = Math.floor(diff / 60);
     const sec  = diff % 60;
 
-    statusTextEl.textContent =
-      `Aktuell in der Konferenz: ${currentClass} (${min} Min ${sec} Sek)`;
+    statusTextEl.innerHTML =
+      `Aktuell in der Konferenz: ${currentClass} <span class="zeit">(${min} Min ${sec} Sek)</span>`;
 
     updateAmpel(min);
   }, 1000);
