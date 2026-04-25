@@ -34,12 +34,9 @@ body {
     .start-box {
       position: absolute;
       top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      left: calc(50% - 160px);
+      transform: translateY(-50%);
       user-select: none;
-      text-align: center;
-      width: max-content;
-      max-width: 55%;
     }
     .start-box {
       background-color: #8b0000;
@@ -240,8 +237,7 @@ body {
       }
   
   .status-text {
-    position: static;
-    transform: none;
+    margin-left: 80px;
     margin-top: 5px;
     max-width: 70%;
     white-space: normal;
