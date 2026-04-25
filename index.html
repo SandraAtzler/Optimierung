@@ -549,7 +549,7 @@ function startTimer(start) {
     const sec  = diff % 60;
 
     statusTextEl.innerHTML =
-      `Aktuell in der Konferenz: ${currentClass} <span class="zeit">(${min} Min ${sec} Sek)</span>`;
+      `Aktuell in der Konferenz: ${currentClass} <span class="zeit">(${min} min ${sec} s)</span>`;
 
     updateAmpel(min);
   }, 1000);
@@ -698,7 +698,7 @@ function pauseKonferenz() {
 ========================= */
 function formatMinutes(seconds) {
   const minutes = Math.round(seconds / 60);
-  return `${minutes} Min`;
+  return `${minutes} min`;
 }
 
 const groups = {
