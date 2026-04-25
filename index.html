@@ -237,9 +237,11 @@ body {
       }
   
   .status-text {
-    margin-left: 100px;
+    position: static;
+    transform: none;
+    margin-left: 0;
     margin-top: 5px;
-    max-width: 70%;
+    max-width: calc(100% - 130px);
     white-space: normal;
     word-break: break-word;
   }
@@ -253,6 +255,8 @@ body {
   }
 
   #ampel {
+    position: static;
+    transform: none;
     margin-top: 6px;
     align-self: flex-start;
   }
@@ -278,15 +282,15 @@ body {
 <div class="logo-status-wrapper">
   <img src="https://info.marianumlan.de/nachmittagsanmeldung/assets/img/logo2.png" class="logo">
   <div id="startBox" class="start-box"></div>
-  <div class="status-text" style="display:flex; align-items:center; gap:12px;">
+  <div class="status-text" style="position:absolute; top:50%; left:calc(50% - 160px); transform:translateY(-50%);">
     <span id="statusText">Die Konferenzen haben noch nicht begonnen.</span>
-    <svg id="ampel" width="24" height="62" viewBox="0 0 24 62" style="display:none; flex-shrink:0;" xmlns="http://www.w3.org/2000/svg">
-      <rect x="0" y="0" width="24" height="62" rx="5" fill="#222"/>
-      <circle id="ampelRot"   cx="12" cy="11" r="8" fill="#555"/>
-      <circle id="ampelGelb"  cx="12" cy="31" r="8" fill="#555"/>
-      <circle id="ampelGruen" cx="12" cy="51" r="8" fill="#555"/>
-    </svg>
   </div>
+  <svg id="ampel" width="24" height="62" viewBox="0 0 24 62" style="display:none; position:absolute; top:50%; left:calc(50% + 220px); transform:translateY(-50%);" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="0" width="24" height="62" rx="5" fill="#222"/>
+    <circle id="ampelRot"   cx="12" cy="11" r="8" fill="#555"/>
+    <circle id="ampelGelb"  cx="12" cy="31" r="8" fill="#555"/>
+    <circle id="ampelGruen" cx="12" cy="51" r="8" fill="#555"/>
+  </svg>
 </div>
 
 <div class="container">
