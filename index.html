@@ -212,6 +212,15 @@ body {
     }
 
 
+    @media (min-width: 626px) {
+      #ampel {
+        position: absolute;
+        top: 50%;
+        left: calc(50% + 220px);
+        transform: translateY(-50%);
+      }
+    }
+
     @media (max-width: 625px) {
       .class-label {
         display: none;
@@ -237,11 +246,9 @@ body {
       }
   
   .status-text {
-    position: static;
-    transform: none;
-    margin-left: 0;
+    margin-left: 100px;
     margin-top: 5px;
-    max-width: calc(100% - 130px);
+    max-width: 70%;
     white-space: normal;
     word-break: break-word;
   }
@@ -255,8 +262,8 @@ body {
   }
 
   #ampel {
-    position: static;
-    transform: none;
+    position: static !important;
+    transform: none !important;
     margin-top: 6px;
     align-self: flex-start;
   }
@@ -285,7 +292,7 @@ body {
   <div class="status-text" style="position:absolute; top:50%; left:calc(50% - 160px); transform:translateY(-50%);">
     <span id="statusText">Die Konferenzen haben noch nicht begonnen.</span>
   </div>
-  <svg id="ampel" width="24" height="62" viewBox="0 0 24 62" style="display:none; position:absolute; top:50%; left:calc(50% + 220px); transform:translateY(-50%);" xmlns="http://www.w3.org/2000/svg">
+  <svg id="ampel" width="24" height="62" viewBox="0 0 24 62" style="display:none;" xmlns="http://www.w3.org/2000/svg">
     <rect x="0" y="0" width="24" height="62" rx="5" fill="#222"/>
     <circle id="ampelRot"   cx="12" cy="11" r="8" fill="#555"/>
     <circle id="ampelGelb"  cx="12" cy="31" r="8" fill="#555"/>
