@@ -132,54 +132,29 @@ body {
     button.used {
       background-color: #e3e3e3;
       position: relative;
-      overflow: visible;
-    }
-    button.used[data-tooltip]:hover::before {
-      content: attr(data-tooltip);
-      position: absolute;
-      bottom: calc(100% + 6px);
-      left: 50%;
-      transform: translateX(-50%);
-      background: #333;
-      color: #fff;
-      font-size: 12px;
-      font-weight: normal;
-      padding: 4px 8px;
-      border-radius: 5px;
-      white-space: nowrap;
-      pointer-events: none;
-      z-index: 100;
-    }
-    button.used[data-tooltip]:hover::after {
-      content: "";
-      position: absolute;
-      bottom: calc(100% + 1px);
-      left: 50%;
-      transform: translateX(-50%);
-      border: 5px solid transparent;
-      border-top-color: #333;
-      pointer-events: none;
-      z-index: 100;
+      overflow: hidden;
     }
     button.used.active {
        background-color: #e07b7b;
+       overflow: visible;
     }  
     button.used.active::after {
         display: none;
     }  
-    button.used:not([data-tooltip]):after,
-    button.used[data-tooltip]:not(:hover)::after {
+    button.used::after {
       content: "";
       position: absolute;
       bottom: 0;
       left: 0;
-      width: 100%;
+      width: 200%;
       height: 2px;
       background-color: #cecece;
       transform-origin: left bottom;
-      transform: rotate(-35deg) scaleX(1.3);
+      transform: rotate(-27deg);
       pointer-events: none;
     }
+
+    /* Tooltip via JS-gesetztem title-Attribut — nativ */
     
     .lock {
       position: fixed;
@@ -340,7 +315,7 @@ body {
     }
     .hs-row:last-child { margin-bottom: 0; }
     .hs-icon { font-size: 13px; display: inline-block; width: 20px; text-align: center; }
-    .hs-label { color: #777; min-width: 95px; display: inline-block; }
+    .hs-label { color: #777; min-width: 75px; display: inline-block; }
     .hs-value { font-weight: bold; color: #222; white-space: nowrap; }
 
 
@@ -838,9 +813,9 @@ db.ref("historie").on("value", snap => {
       const d = data[cls].dauer;
       const min = Math.floor(d / 60);
       const sec = d % 60;
-      btn.dataset.tooltip = `${min} min ${sec} s`;
+      btn.title = `${min} min ${sec} s`;
     } else {
-      delete btn.dataset.tooltip;
+      btn.title = "";
     }
   });
 
