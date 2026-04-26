@@ -198,6 +198,7 @@ body {
       margin: 30px auto 20px;
       max-width: 600px;
       display: none;
+      flex-direction: column;
       gap: 12px;
       opacity: 0;
       transform: translateY(10px);
@@ -205,9 +206,13 @@ body {
     }
     .highscore-wrapper.visible {
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       opacity: 1;
       transform: translateY(0);
+    }
+    .hs-cards-row {
+      display: flex;
+      gap: 12px;
     }
     .hs-card {
       flex: 1;
@@ -220,10 +225,9 @@ body {
       transform: translateY(12px);
       transition: opacity 0.35s ease, transform 0.35s ease;
     }
-    .highscore-wrapper.visible .hs-card:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.05s; }
-    .highscore-wrapper.visible .hs-card:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.15s; }
-    .highscore-wrapper.visible .hs-card:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.25s; }
-    .highscore-wrapper.visible .hs-card:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 0.35s; }
+    .highscore-wrapper.visible .hs-cards-row .hs-card:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.05s; }
+    .highscore-wrapper.visible .hs-cards-row .hs-card:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.15s; }
+    .highscore-wrapper.visible .hs-cards-row .hs-card:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.25s; }
 
     .hs-summary {
       margin-top: 12px;
@@ -365,6 +369,10 @@ body {
     flex-direction: column;
   }
 
+  .hs-cards-row {
+    flex-direction: column;
+  }
+
   .hs-label { min-width: 115px; }
 
   }
@@ -460,6 +468,7 @@ body {
       </div>
     </div> 
       <div id="highscoreBox" class="highscore-wrapper">
+        <div class="hs-cards-row">
         <div class="hs-card">
           <div class="hs-title">Klassen 10</div>
           <div class="hs-body">
@@ -481,24 +490,25 @@ body {
             <div class="hs-row"><span class="hs-icon">🐢</span><span class="hs-label">Ausführlichste</span><span class="hs-value" id="hs-57-long">–</span></div>
           </div>
         </div>
-        <div class="hs-summary">
-          <div class="hs-title">Ø Durchschnitt pro Gruppe</div>
-          <div class="hs-summary-body">
-            <div class="hs-summary-col">
-              <div class="hs-col-title">Klassen 10</div>
-              <div class="hs-summary-row"><span class="hs-summary-label">Ø</span><span class="hs-summary-value" id="hs-10-avg">–</span></div>
-            </div>
-            <div class="hs-summary-col">
-              <div class="hs-col-title">Klassen 8 &amp; 9</div>
-              <div class="hs-summary-row"><span class="hs-summary-label">Ø</span><span class="hs-summary-value" id="hs-89-avg">–</span></div>
-            </div>
-            <div class="hs-summary-col">
-              <div class="hs-col-title">Klassen 5–7</div>
-              <div class="hs-summary-row"><span class="hs-summary-label">Ø</span><span class="hs-summary-value" id="hs-57-avg">–</span></div>
-            </div>
+      </div>
+      <div class="hs-summary">
+        <div class="hs-title">Ø Durchschnitt pro Gruppe</div>
+        <div class="hs-summary-body">
+          <div class="hs-summary-col">
+            <div class="hs-col-title">Klassen 10</div>
+            <div class="hs-summary-row"><span class="hs-summary-label">Ø</span><span class="hs-summary-value" id="hs-10-avg">–</span></div>
+          </div>
+          <div class="hs-summary-col">
+            <div class="hs-col-title">Klassen 8 &amp; 9</div>
+            <div class="hs-summary-row"><span class="hs-summary-label">Ø</span><span class="hs-summary-value" id="hs-89-avg">–</span></div>
+          </div>
+          <div class="hs-summary-col">
+            <div class="hs-col-title">Klassen 5–7</div>
+            <div class="hs-summary-row"><span class="hs-summary-label">Ø</span><span class="hs-summary-value" id="hs-57-avg">–</span></div>
           </div>
         </div>
-        </div>
+      </div>
+    </div>
       </div>
 </div>
 
