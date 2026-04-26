@@ -218,6 +218,19 @@ body {
       top: 20px;
     }
 
+    #pauseBox {
+      top: 70px;
+    }
+
+    .start-announcement {
+      display: inline-block;
+      background-color: darkred;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
     #ampelRot, #ampelGelb, #ampelGruen {
       transition: fill 0.6s ease;
     }
@@ -651,13 +664,13 @@ function startTimer(start) {
     const sec  = diff % 60;
 
     if (diff < 10) {
-      statusTextEl.innerHTML = `Die Konferenz der ${currentClass} startet jetzt!`;
+      ampelEl.style.display = "none";
+      statusTextEl.innerHTML = `<span class="start-announcement">Die Konferenz der ${currentClass} startet jetzt!</span>`;
     } else {
       statusTextEl.innerHTML =
         `Aktuell in der Konferenz: ${currentClass} <span class="zeit">(${min} min ${sec} s)</span>`;
+      updateAmpel(min);
     }
-
-    updateAmpel(min);
   }, 1000);
 }
 
