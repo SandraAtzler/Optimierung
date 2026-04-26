@@ -850,6 +850,7 @@ db.ref("historie").on("value", snap => {
     for (const cls of classes) {
       if (!data[cls]) continue;
       const d = data[cls].dauer;
+      if (d > 3600) continue; // vergessene Pause ausschließen
       if (shortest === null || d < shortest.dauer) shortest = { klasse: cls, dauer: d };
       if (longest  === null || d > longest.dauer)  longest  = { klasse: cls, dauer: d };
       total += d;
