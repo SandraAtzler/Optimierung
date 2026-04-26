@@ -190,8 +190,8 @@ body {
       top: 20px;
     }
 
-    #pauseBox {
-      top: 70px;
+    #ampelRot, #ampelGelb, #ampelGruen {
+      transition: fill 0.6s ease;
     }
 
     .highscore-wrapper {
@@ -216,7 +216,62 @@ body {
       border-radius: 8px;
       overflow: hidden;
       box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
     }
+    .highscore-wrapper.visible .hs-card:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.05s; }
+    .highscore-wrapper.visible .hs-card:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.15s; }
+    .highscore-wrapper.visible .hs-card:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.25s; }
+    .highscore-wrapper.visible .hs-card:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 0.35s; }
+
+    .hs-summary {
+      margin-top: 12px;
+      background: white;
+      border: 2px solid #eee;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.35s ease 0.35s, transform 0.35s ease 0.35s;
+    }
+    .highscore-wrapper.visible .hs-summary {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .hs-summary .hs-title {
+      font-weight: bold;
+      font-size: 14px;
+      color: #333;
+      text-align: center;
+      padding: 10px 14px;
+      background-color: #eee;
+      border-bottom: 2px solid #eee;
+    }
+    .hs-summary-body {
+      padding: 10px 14px;
+      display: flex;
+      gap: 0;
+    }
+    .hs-summary-col {
+      flex: 1;
+      font-size: 12px;
+      color: #333;
+    }
+    .hs-summary-col .hs-col-title {
+      font-weight: bold;
+      color: #8b0000;
+      margin-bottom: 4px;
+      font-size: 12px;
+    }
+    .hs-summary-row {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 3px;
+    }
+    .hs-summary-label { color: #777; min-width: 30px; }
+    .hs-summary-value { font-weight: bold; }
     .hs-title {
       font-weight: bold;
       font-size: 14px;
@@ -310,7 +365,7 @@ body {
     flex-direction: column;
   }
 
-  .hs-label { min-width: 210px; }
+  .hs-label { min-width: 115px; }
 
   }
 </style>
@@ -424,6 +479,23 @@ body {
           <div class="hs-body">
             <div class="hs-row"><span class="hs-icon">🏆</span><span class="hs-label">Schnellste</span><span class="hs-value" id="hs-57-short">–</span></div>
             <div class="hs-row"><span class="hs-icon">🐢</span><span class="hs-label">Ausführlichste</span><span class="hs-value" id="hs-57-long">–</span></div>
+          </div>
+        </div>
+        <div class="hs-summary">
+          <div class="hs-title">Ø Durchschnitt pro Gruppe</div>
+          <div class="hs-summary-body">
+            <div class="hs-summary-col">
+              <div class="hs-col-title">Klassen 10</div>
+              <div class="hs-summary-row"><span class="hs-summary-label">Ø</span><span class="hs-summary-value" id="hs-10-avg">–</span></div>
+            </div>
+            <div class="hs-summary-col">
+              <div class="hs-col-title">Klassen 8 &amp; 9</div>
+              <div class="hs-summary-row"><span class="hs-summary-label">Ø</span><span class="hs-summary-value" id="hs-89-avg">–</span></div>
+            </div>
+            <div class="hs-summary-col">
+              <div class="hs-col-title">Klassen 5–7</div>
+              <div class="hs-summary-row"><span class="hs-summary-label">Ø</span><span class="hs-summary-value" id="hs-57-avg">–</span></div>
+            </div>
           </div>
         </div>
         </div>
@@ -659,6 +731,7 @@ function resetAll() {
   ["10","89","57"].forEach(g => {
     document.getElementById(`hs-${g}-short`).textContent = "–";
     document.getElementById(`hs-${g}-long`).textContent  = "–";
+    document.getElementById(`hs-${g}-avg`).textContent   = "–";
   });
 
   // Highscore-Box ausblenden falls sichtbar
@@ -720,18 +793,24 @@ db.ref("historie").on("value", snap => {
     const classes = groups[groupKey];
     let shortest = null;
     let longest  = null;
+    let total    = 0;
+    let count    = 0;
 
     for (const cls of classes) {
       if (!data[cls]) continue;
       const d = data[cls].dauer;
       if (shortest === null || d < shortest.dauer) shortest = { klasse: cls, dauer: d };
       if (longest  === null || d > longest.dauer)  longest  = { klasse: cls, dauer: d };
+      total += d;
+      count++;
     }
 
     document.getElementById(`hs-${groupKey}-short`).textContent =
       shortest ? `${shortest.klasse}: ${formatMinutes(shortest.dauer)}` : "–";
     document.getElementById(`hs-${groupKey}-long`).textContent =
       longest  ? `${longest.klasse}: ${formatMinutes(longest.dauer)}`   : "–";
+    document.getElementById(`hs-${groupKey}-avg`).textContent =
+      count > 0 ? formatMinutes(total / count) : "–";
   }
 });
       
