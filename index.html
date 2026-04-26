@@ -132,7 +132,34 @@ body {
     button.used {
       background-color: #e3e3e3;
       position: relative;
-      overflow: hidden;
+      overflow: visible;
+    }
+    button.used[data-tooltip]:hover::before {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      color: #fff;
+      font-size: 12px;
+      font-weight: normal;
+      padding: 4px 8px;
+      border-radius: 5px;
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 100;
+    }
+    button.used[data-tooltip]:hover::after {
+      content: "";
+      position: absolute;
+      bottom: calc(100% + 1px);
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: #333;
+      pointer-events: none;
+      z-index: 100;
     }
     button.used.active {
        background-color: #e07b7b;
@@ -140,7 +167,8 @@ body {
     button.used.active::after {
         display: none;
     }  
-    button.used::after {
+    button.used:not([data-tooltip]):after,
+    button.used[data-tooltip]:not(:hover)::after {
       content: "";
       position: absolute;
       top: 50%;
@@ -798,6 +826,19 @@ const groups = {
 
 db.ref("historie").on("value", snap => {
   const data = snap.val() || {};
+
+  // Tooltips auf Buttons setzen
+  document.querySelectorAll("button").forEach(btn => {
+    const cls = btn.textContent.trim();
+    if (data[cls]) {
+      const d = data[cls].dauer;
+      const min = Math.floor(d / 60);
+      const sec = d % 60;
+      btn.dataset.tooltip = `${min} min ${sec} s`;
+    } else {
+      delete btn.dataset.tooltip;
+    }
+  });
 
   for (const groupKey in groups) {
     const classes = groups[groupKey];
