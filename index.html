@@ -297,6 +297,7 @@ body {
       font-size: 12px;
     }
     .hs-row-label { color: #777; display: flex; align-items: center; gap: 5px; }
+    .hs-row-label .short { display: none; }
     .hs-row-value { font-weight: bold; color: #222; white-space: nowrap; }
 
 
@@ -364,9 +365,15 @@ body {
   }
   
   .highscore-wrapper.visible {
-    flex-direction: column;
+    flex-direction: row;
   }
-  .hs-avg { font-size: 18px; }
+  .hs-avg { font-size: 16px; padding: 6px 0 2px; }
+  .hs-avg-label { font-size: 10px; margin-bottom: 6px; }
+  .hs-header { font-size: 11px; padding: 7px 4px; }
+  .hs-footer { padding: 6px 6px; gap: 3px; }
+  .hs-row { font-size: 10px; }
+  .hs-row-label .full { display: none; }
+  .hs-row-label .short { display: inline; }
   }
 </style>
 </head>
@@ -466,8 +473,8 @@ body {
           <div class="hs-avg" id="hs-10-avg">–</div>
           <div class="hs-avg-label">Ø Durchschnitt</div>
           <div class="hs-footer">
-            <div class="hs-row"><span class="hs-row-label">Schnellste</span><span class="hs-row-value" id="hs-10-short">–</span></div>
-            <div class="hs-row"><span class="hs-row-label">Ausführlichste</span><span class="hs-row-value" id="hs-10-long">–</span></div>
+            <div class="hs-row"><span class="hs-row-label"><span class="full">Schnellste</span><span class="short">Schnell.</span></span><span class="hs-row-value" id="hs-10-short">–</span></div>
+            <div class="hs-row"><span class="hs-row-label"><span class="full">Ausführlichste</span><span class="short">Ausf.</span></span><span class="hs-row-value" id="hs-10-long">–</span></div>
           </div>
         </div>
         <div class="hs-card">
@@ -475,8 +482,8 @@ body {
           <div class="hs-avg" id="hs-89-avg">–</div>
           <div class="hs-avg-label">Ø Durchschnitt</div>
           <div class="hs-footer">
-            <div class="hs-row"><span class="hs-row-label">Schnellste</span><span class="hs-row-value" id="hs-89-short">–</span></div>
-            <div class="hs-row"><span class="hs-row-label">Ausführlichste</span><span class="hs-row-value" id="hs-89-long">–</span></div>
+            <div class="hs-row"><span class="hs-row-label"><span class="full">Schnellste</span><span class="short">Schnell.</span></span><span class="hs-row-value" id="hs-89-short">–</span></div>
+            <div class="hs-row"><span class="hs-row-label"><span class="full">Ausführlichste</span><span class="short">Ausf.</span></span><span class="hs-row-value" id="hs-89-long">–</span></div>
           </div>
         </div>
         <div class="hs-card">
@@ -484,8 +491,8 @@ body {
           <div class="hs-avg" id="hs-57-avg">–</div>
           <div class="hs-avg-label">Ø Durchschnitt</div>
           <div class="hs-footer">
-            <div class="hs-row"><span class="hs-row-label">Schnellste</span><span class="hs-row-value" id="hs-57-short">–</span></div>
-            <div class="hs-row"><span class="hs-row-label">Ausführlichste</span><span class="hs-row-value" id="hs-57-long">–</span></div>
+            <div class="hs-row"><span class="hs-row-label"><span class="full">Schnellste</span><span class="short">Schnell.</span></span><span class="hs-row-value" id="hs-57-short">–</span></div>
+            <div class="hs-row"><span class="hs-row-label"><span class="full">Ausführlichste</span><span class="short">Ausf.</span></span><span class="hs-row-value" id="hs-57-long">–</span></div>
           </div>
         </div>
       </div>
