@@ -878,14 +878,10 @@ document.addEventListener("mouseover", e => {
   const btn = e.target.closest("button.used");
   if (btn && btn.dataset.tooltip) {
     btnTooltip.textContent = btn.dataset.tooltip;
+    const rect = btn.getBoundingClientRect();
     btnTooltip.style.display = "block";
-  }
-});
-
-document.addEventListener("mousemove", e => {
-  if (btnTooltip.style.display === "block") {
-    btnTooltip.style.left = e.clientX + "px";
-    btnTooltip.style.top  = (e.clientY - 36) + "px";
+    btnTooltip.style.left = (rect.left + rect.width / 2) + "px";
+    btnTooltip.style.top  = (rect.top - 36) + "px";
   }
 });
 
