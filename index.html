@@ -302,10 +302,11 @@ body {
       font-weight: bold;
       color: #222;
       white-space: nowrap;
-      font-variant-numeric: tabular-nums;
-      min-width: 55px;
-      text-align: right;
+      display: flex;
+      gap: 4px;
     }
+    .hs-val-cls  { min-width: 28px; }
+    .hs-val-time { font-variant-numeric: tabular-nums; min-width: 40px; }
 
 
     @media (max-width: 625px) {
@@ -828,10 +829,10 @@ db.ref("historie").on("value", snap => {
       count++;
     }
 
-    document.getElementById(`hs-${groupKey}-short`).textContent =
-      shortest ? `${shortest.klasse}: ${formatMinutes(shortest.dauer)}` : "–";
-    document.getElementById(`hs-${groupKey}-long`).textContent =
-      longest  ? `${longest.klasse}: ${formatMinutes(longest.dauer)}`   : "–";
+    document.getElementById(`hs-${groupKey}-short`).innerHTML =
+      shortest ? `<span class="hs-val-cls">${shortest.klasse}:</span><span class="hs-val-time">${formatMinutes(shortest.dauer)}</span>` : "–";
+    document.getElementById(`hs-${groupKey}-long`).innerHTML =
+      longest  ? `<span class="hs-val-cls">${longest.klasse}:</span><span class="hs-val-time">${formatMinutes(longest.dauer)}</span>`   : "–";
     document.getElementById(`hs-${groupKey}-avg`).textContent =
       count >= 2 ? formatMinutes(total / count) : "–";
   }
