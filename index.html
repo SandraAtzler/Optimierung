@@ -306,7 +306,7 @@ body {
       gap: 4px;
     }
     .hs-val-cls  { min-width: 28px; }
-    .hs-val-time { font-variant-numeric: tabular-nums; min-width: 40px; }
+    .hs-val-time { font-variant-numeric: tabular-nums; min-width: 40px; text-align: right; }
 
 
     @media (max-width: 625px) {
@@ -379,8 +379,9 @@ body {
   .hs-avg-label { font-size: 10px; margin-bottom: 6px; }
   .hs-header { font-size: 11px; padding: 7px 4px; }
   .hs-footer { padding: 6px 6px; gap: 3px; }
-  .hs-row { font-size: 10px; }
-  .hs-row-value { min-width: 42px; }
+  .hs-row { font-size: 10px; justify-content: space-between; }
+  .hs-val-cls { min-width: 22px; }
+  .hs-val-time { min-width: 30px; }
   .hs-row-label .full { display: none; }
   .hs-row-label .short { display: inline; }
   }
